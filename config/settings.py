@@ -76,8 +76,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'cloudinary',
     'core',
     'django.contrib.sites',
@@ -213,12 +213,12 @@ if CLOUDINARY_URL:
     STORAGES = {
         'default':     {'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'},
         'staticfiles': {
-            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
     # Compatibility shims for older packages (like django-cloudinary-storage)
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    STATICFILES_STORAGE  = 'whitenoise.storage.CompressedStaticFilesStorage'
+    STATICFILES_STORAGE  = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:
     if not DEBUG:
         logging.getLogger('django').critical(
@@ -229,11 +229,11 @@ else:
     STORAGES = {
         'default':     {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
         'staticfiles': {
-            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    STATICFILES_STORAGE  = 'whitenoise.storage.CompressedStaticFilesStorage'
+    STATICFILES_STORAGE  = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
 # ─────────────────────────────────────────────
