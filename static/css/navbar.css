@@ -1,0 +1,102 @@
+/* ============================================================
+   static/css/navbar.css
+   Socaily – Premium Dark Navbar
+   ============================================================ */
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav);
+  background: rgba(7, 9, 15, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  justify-content: space-between; padding: 0 28px;
+  z-index: 500;
+  transition: background var(--t-mid);
+}
+
+/* ── Logo ── */
+.logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: var(--grad);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradShift 5s ease infinite;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Nav icon group ── */
+.nicons {
+  display: flex; align-items: center; gap: 6px;
+}
+
+.nibtn {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  color: var(--text-secondary);
+  border-radius: var(--r-sm);
+  transition: color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+}
+.nibtn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+.nibtn svg { width: 22px; height: 22px; }
+
+/* ── Active nav icon glow ── */
+.nibtn.active {
+  color: var(--text-primary);
+}
+.nibtn.active::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 2px;
+  background: var(--grad);
+  border-radius: 2px;
+}
+
+/* ── Notification dot ── */
+.ndot {
+  position: absolute; top: 5px; right: 5px;
+  width: 9px; height: 9px;
+  background: var(--grad-warm);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  animation: ndotPulse 2s ease infinite;
+}
+
+/* ── Avatar ── */
+.navat {
+  width: 34px; height: 34px; border-radius: 50%;
+  overflow: hidden; cursor: pointer;
+  padding: 2px;
+  background: var(--bg-2);
+  border: 2px solid var(--border);
+  transition: border-color var(--t-fast), transform var(--t-fast);
+  margin-left: 4px;
+}
+.navat:hover {
+  border-color: transparent;
+  background: var(--grad);
+  transform: scale(1.08);
+}
+.navat > img, .navat > div {
+  width: 100%; height: 100%;
+  border-radius: 50%; object-fit: cover;
+}
+.navat-placeholder {
+  width: 100%; height: 100%;
+  background: var(--grad-short);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}

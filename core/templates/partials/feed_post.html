@@ -1,0 +1,82 @@
+<!-- ================================================================
+   partials/feed_post.html
+   One post card. Variable: post, liked_ids, saved_ids, request
+   ================================================================ -->
+<div class="post">
+
+  {# ── Post Header ── #}
+  <div class="ph">
+    <a href="{% url 'profile' post.user.username %}" class="par">
+      <div class="pari">
+        {% if post.user.profile and post.user.profile.profile_image %}
+          <img src="{{ post.user.profile.profile_image.url }}" alt="{{ post.user.username }}">
+        {% else %}
+          🧑
+        {% endif %}
+      </div>
+    </a>
+    <div class="pm">
+      <a href="{% url 'profile' post.user.username %}" class="pun">{{ post.user.username }}</a>
+      {% if post.location %}
+        <div class="ploc">📍 {{ post.location }}</div>
+      {% endif %}
+    </div>
+
+    {# ── Post Menu (⋯) ── #}
+    <div style="position:relative">
+      <button class="pmb" onclick="togglePostMenu(event,'pmenu{{ post.id }}')" title="Options">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+        </svg>
+      </button>
+      <div id="pmenu{{ post.id }}" class="post-menu-drop">
+        <button class="post-menu-item" onclick="openShareSheet({{ post.id }}); togglePostMenu(event, 'pmenu{{ post.id }}');">🔗 Copy link</button>
+        <button class="post-menu-item" onclick="openShareDM({{ post.id }}); togglePostMenu(event, 'pmenu{{ post.id }}');">✉️ Send via DM</button>
+      </div>
+    </div>
+  </div>
+
+  {# ── Post Image ── #}
+  {% if post.image %}
+    <div class="pimg">
+      <img src="{{ post.image.url }}" alt="{{ post.caption|truncatechars:60 }}">
+    </div>
+  {% endif %}
+
+  {# ── Action Buttons ── #}
+  {% include "components/post_actions.html" with post=post liked_ids=liked_ids saved_ids=saved_ids %}
+
+  {# ── Post Info ── #}
+  <div class="pinfo">
+    <div class="plikes">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</div>
+
+    <div class="pcap">
+      <span class="un">{{ post.user.username }}</span>{{ post.caption }}
+    </div>
+
+    {% with comment_count=post.comments.count %}
+      {% if comment_count > 0 %}
+        <a class="vcmt" onclick="toggleComments('cmt{{ post.id }}')">
+          View all {{ comment_count }} comment{{ comment_count|pluralize }}
+        </a>
+      {% endif %}
+    {% endwith %}
+
+    {# Comments list #}
+    <div id="cmt{{ post.id }}" class="comment-box">
+      {% for comment in post.comments.all %}
+        {% include "components/comment_item.html" with comment=comment %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="ptime">{{ post.created_at|timesince }} ago</div>
+
+  {# ── Add Comment Form ── #}
+  <form method="POST" action="{% url 'add_comment' post.id %}" class="crow">
+    {% csrf_token %}
+    <input class="cinput" type="text" name="text" placeholder="Add a comment…" autocomplete="off" required>
+    <button type="submit" class="postbtn">Post</button>
+  </form>
+
+</div>

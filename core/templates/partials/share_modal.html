@@ -1,0 +1,35 @@
+<!-- ================================================================
+   partials/share_modal.html
+   No view-level variables needed — populated by JS openShareSheet()
+   ================================================================ -->
+<div id="shareOverlay"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:380px;overflow:hidden;box-shadow:var(--shadow-lg)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)">
+      <span style="font-size:15px;font-weight:800;color:var(--dark)">Share</span>
+      <button onclick="closeShareSheet()" style="background:none;border:none;cursor:pointer;font-size:24px;color:var(--dark)">&times;</button>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+      <input type="hidden" id="sharePostId">
+      <div style="display:flex;gap:8px">
+        <input id="shareLinkInput" readonly
+               style="flex:1;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;background:var(--bg-3);color:var(--dark)"
+               value="">
+        <button onclick="copyShareLink()"
+                style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer">Copy</button>
+      </div>
+      <div id="shareDmSection" style="display:none">
+        <div style="font-size:13px;font-weight:700;margin-bottom:6px;color:var(--gray)">Send via DM</div>
+        <div style="display:flex;gap:8px">
+          <input id="shareDmUser" type="text" placeholder="Username&#x2026;"
+                 style="flex:1;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;font-family:inherit;background:var(--bg-3);color:var(--dark)">
+          <button onclick="sendShareDM()"
+                  style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer">Send</button>
+        </div>
+      </div>
+      <button id="shareDmToggle"
+              onclick="document.getElementById('shareDmSection').style.display='block';this.style.display='none'"
+              style="background:var(--bg-3);color:var(--dark);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600">Send to a friend</button>
+    </div>
+  </div>
+</div>

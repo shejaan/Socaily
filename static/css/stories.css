@@ -1,0 +1,75 @@
+/* ============================================================
+   static/css/stories.css
+   Socaily – Gradient Story Rings
+   ============================================================ */
+
+.sbar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 12px;
+  display: flex; gap: 8px; overflow-x: auto;
+  scrollbar-width: none;
+  animation: up 0.35s 0.05s var(--ease) both;
+}
+.sbar::-webkit-scrollbar { display: none; }
+
+.sit {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 0 8px; cursor: pointer;
+  flex-shrink: 0;
+  transition: transform var(--t-fast);
+}
+.sit:hover { transform: scale(1.07); }
+
+/* ── Story ring with animated gradient ── */
+.sring {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--grad);
+  background-size: 200% 200%;
+  animation: gradShift 4s ease infinite;
+  padding: 2.5px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.sring.seen {
+  background: var(--bg-3);
+  animation: none;
+}
+
+/* ── Story ring inner ── */
+.sri {
+  width: 100%; height: 100%; border-radius: 50%;
+  border: 2px solid var(--bg-card);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; background: var(--bg-2);
+}
+.sri img { width: 100%; height: 100%; object-fit: cover; }
+
+.sname {
+  font-size: 11px; font-weight: 500;
+  color: var(--text-secondary);
+  max-width: 68px; text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── Add story button ── */
+.sadd {
+  width: 60px; height: 60px; border-radius: 50%;
+  border: 2px dashed var(--border);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; background: var(--bg-2);
+  overflow: hidden; transition: border-color var(--t-fast);
+}
+.sadd:hover { border-color: var(--blue); }
+.sadd img { width: 100%; height: 100%; object-fit: cover; }
+
+.saddbadge {
+  position: absolute; bottom: 0; right: 0;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--grad-short);
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--bg-card); color: #fff;
+  font-size: 14px; font-weight: 700; line-height: 1;
+}

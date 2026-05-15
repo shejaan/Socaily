@@ -1,0 +1,46 @@
+<!-- ================================================================
+   components/post_actions.html
+   Like, comment toggle, share, save action buttons for one post.
+   Variable: post, liked_ids, saved_ids
+   ================================================================ -->
+<div class="pac">
+
+  {# Like Form #}
+  <form method="POST" action="{% url 'like_post' post.id %}" class="like-form">
+    {% csrf_token %}
+    <button type="submit" class="abtn lbtn" title="Like">
+      <svg viewBox="0 0 24 24"
+           {% if post.id in liked_ids %}fill="#ff3040" stroke="#ff3040"{% else %}fill="none" stroke="currentColor"{% endif %}
+           stroke-width="1.8">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>
+  </form>
+
+  {# Comment toggle #}
+  <button class="abtn" onclick="toggleComments('cmt{{ post.id }}')" title="Comment">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+  {# Share #}
+  <button class="abtn" title="Share" onclick="openShareSheet({{ post.id }})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+    </svg>
+  </button>
+
+  {# Save / Bookmark Form #}
+  <form method="POST" action="{% url 'save_post' post.id %}" class="like-form" style="margin-left:auto">
+    {% csrf_token %}
+    <button type="submit" class="abtn bkbtn" title="Save">
+      <svg viewBox="0 0 24 24"
+           {% if post.id in saved_ids %}fill="currentColor"{% else %}fill="none"{% endif %}
+           stroke="currentColor" stroke-width="1.8">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+  </form>
+
+</div>

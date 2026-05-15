@@ -1,6 +1,6 @@
-# Instagram Clone (Django)
+# Socaily (Django)
 
-A full-featured Instagram-like social media web application built using **Django**.
+A full-featured Socaily social media web application built using **Django**.
 Users can create profiles, upload posts, follow other users, like and comment on posts, receive notifications, and send private messages.
 
 ---
@@ -109,11 +109,11 @@ Users receive notifications for:
 
 Clone the repository
 
-git clone https://github.com/shejaan/insta_clone.git
+git clone https://github.com/shejaan/socaily.git
 
 Go to project folder
 
-cd insta_clone
+cd socaily
 
 Create virtual environment
 

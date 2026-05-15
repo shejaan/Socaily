@@ -1,0 +1,65 @@
+<!-- ================================================================
+   components/notification_item.html
+   Reusable notification row for both follow_requests and notifications.
+   Variables:
+     item       — either a FollowRequest or Notification instance
+     item_type  — "follow_request" | "notification"
+   ================================================================ -->
+<div class="notif-item">
+  {# Avatar #}
+  <div class="notif-av">
+    {% if item_type == "follow_request" %}
+      {% with sender=item.sender %}
+        {% if sender and sender.profile and sender.profile.profile_image %}
+          <img src="{{ sender.profile.profile_image.url }}" alt="{{ sender.username }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+        {% else %}
+          🧑
+        {% endif %}
+      {% endwith %}
+    {% else %}
+      {% if item.sender and item.sender.profile and item.sender.profile.profile_image %}
+        <img src="{{ item.sender.profile.profile_image.url }}" alt="{{ item.sender.username }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+      {% else %}
+        🧑
+      {% endif %}
+    {% endif %}
+  </div>
+
+  {# Text #}
+  <div class="notif-text">
+    {% if item_type == "follow_request" %}
+      <span class="nun">{% if item.sender %}{{ item.sender.username }}{% endif %}</span> wants to follow you.
+      <span class="notif-time">{{ item.created_at|timesince }} ago</span>
+    {% else %}
+      <span class="nun">{% if item.sender %}{{ item.sender.username }}{% endif %}</span>
+      {% if item.notif_type == 'like' %}liked your photo.
+      {% elif item.notif_type == 'comment' %}commented on your photo.
+      {% elif item.notif_type == 'follow' %}started following you.
+      {% elif item.notif_type == 'follow_request' %}wants to follow you.
+      {% else %}interacted with your post.
+      {% endif %}
+      <span class="notif-time">{{ item.created_at|timesince }} ago</span>
+    {% endif %}
+  </div>
+
+  {# Follow request action buttons #}
+  {% if item_type == "follow_request" %}
+    <div style="display:flex;gap:6px;flex-shrink:0">
+      <form method="POST" action="{% url 'accept_follow_request' item.id %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="notif-follow-btn follow">Confirm</button>
+      </form>
+      <form method="POST" action="{% url 'decline_follow_request' item.id %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="notif-follow-btn following">Delete</button>
+      </form>
+    </div>
+  {% endif %}
+
+  {# Post thumbnail for like/comment notifications #}
+  {% if item_type == "notification" and item.post and item.post.image %}
+    <div class="notif-thumb">
+      <img src="{{ item.post.image.url }}" alt="" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+  {% endif %}
+</div>

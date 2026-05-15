@@ -1,0 +1,48 @@
+<!-- ================================================================
+   partials/notifications_dropdown.html
+   Requires: unread_notifications_count, follow_requests, notifications
+   ================================================================ -->
+<div style="position:relative">
+  <button class="nibtn" title="Notifications" id="bellBtn" onclick="toggleNotifDrop(event)">
+    {% if unread_notifications_count and unread_notifications_count > 0 %}
+      <div class="ndot" id="notifDot"></div>
+    {% endif %}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+  </button>
+
+  <div id="notifDrop"
+       style="display:none;position:absolute;top:calc(100% + 14px);right:-80px;width:380px;background:var(--bg-3);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(99,102,241,0.15);z-index:500;overflow:hidden;animation:dropIn .2s ease both">
+
+    <div style="padding:16px 18px 12px;font-size:15px;font-weight:800;border-bottom:1px solid var(--border);color:var(--text-primary);background:var(--bg-3);">Notifications</div>
+
+    <div style="max-height:440px;overflow-y:auto;scrollbar-width:thin">
+
+      {# ── Follow Requests ── #}
+      {% if follow_requests %}
+        <div class="notif-section">Follow Requests</div>
+        {% for freq in follow_requests %}
+          {% include "components/notification_item.html" with item=freq item_type="follow_request" %}
+        {% endfor %}
+      {% endif %}
+
+      {# ── General Notifications ── #}
+      {% if notifications %}
+        <div class="notif-section">This Week</div>
+        {% for notif in notifications %}
+          {% include "components/notification_item.html" with item=notif item_type="notification" %}
+        {% endfor %}
+      {% endif %}
+
+      {% if not follow_requests and not notifications %}
+        <div class="notif-empty">
+          <div style="font-size:32px;margin-bottom:10px;">🔔</div>
+          <div>No notifications yet.</div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>

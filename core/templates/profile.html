@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instagram • Profile</title>
-  <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Nunito:wght@400;600;700;800&display=swap"
+  <title>Socaily • {{ profile_user.username }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -17,21 +18,37 @@
     }
 
     :root {
-      --grad: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-      --blue: #0095f6;
-      --border: #dbdbdb;
-      --gray: #8e8e8e;
-      --dark: #262626;
-      --bg: #fafafa;
-      --wh: #fff;
-      --nav: 56px
+      --grad: linear-gradient(135deg, #f7b733, #f56b2a, #e91e8c, #9b27af, #3f5efb, #00c6ff);
+      --grad-short: linear-gradient(135deg, #e91e8c, #3f5efb);
+      --blue: #4f8ef7;
+      --border: rgba(255,255,255,0.07);
+      --border-glow: rgba(99,102,241,0.35);
+      --gray: #94a3b8;
+      --dark: #f0f4ff;
+      --bg: #07090f;
+      --wh: #111827;
+      --bg-2: #0d111c;
+      --bg-3: #131929;
+      --bg-hover: rgba(255,255,255,0.06);
+      --nav: 64px;
+      --r-md: 14px;
+      --r-lg: 20px;
+      --t-fast: 0.15s cubic-bezier(0.4,0,0.2,1);
     }
 
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--dark);
-      min-height: 100vh
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%, rgba(63,94,251,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(233,30,140,0.06) 0%, transparent 60%);
     }
 
     a {
@@ -48,74 +65,86 @@
 
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: var(--nav);
-      background: var(--wh);
+      background: rgba(7,9,15,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
-      z-index: 100
+      padding: 0 28px;
+      z-index: 500;
     }
 
     .logo {
-      font-family: 'Grand Hotel', cursive;
-      font-size: 26px;
-      color: var(--dark)
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      background: var(--grad);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradShift 5s ease infinite;
+      cursor: pointer;
     }
+
+    @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
     .nicons {
       display: flex;
       align-items: center;
-      gap: 16px
+      gap: 6px;
     }
 
     .nibtn {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--dark);
-      transition: opacity .15s;
-      position: relative
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      color: #94a3b8;
+      border-radius: 8px;
+      transition: color var(--t-fast), background var(--t-fast);
+      position: relative;
     }
 
     .nibtn:hover {
-      opacity: .6
+      color: var(--dark);
+      background: rgba(255,255,255,0.06);
     }
 
-    .nibtn svg {
-      width: 24px;
-      height: 24px
-    }
+    .nibtn svg { width: 22px; height: 22px; }
 
     .ndot {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      width: 8px;
-      height: 8px;
-      background: #ff3040;
+      position: absolute; top: 5px; right: 5px;
+      width: 9px; height: 9px;
+      background: linear-gradient(135deg, #f7b733, #e91e8c);
       border-radius: 50%;
-      border: 1.5px solid #fff
+      border: 2px solid var(--bg);
+      animation: ndotPulse 2s ease infinite;
     }
+    @keyframes ndotPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
 
     .navat {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      overflow: hidden;
-      cursor: pointer;
-      border: 2px solid var(--dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      background: linear-gradient(135deg, #a8edea, #fed6e3)
+      width: 34px; height: 34px; border-radius: 50%;
+      overflow: hidden; cursor: pointer;
+      padding: 2px;
+      background: var(--bg-2);
+      border: 2px solid var(--border);
+      transition: border-color var(--t-fast), transform var(--t-fast);
+      margin-left: 4px;
+    }
+    .navat:hover {
+      background: var(--grad);
+      transform: scale(1.08);
+      border-color: transparent;
+    }
+    .navat > img, .navat > div {
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+    }
+    .navat-placeholder {
+      width: 100%; height: 100%; background: var(--grad-short);
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
     }
 
     .page {
@@ -142,7 +171,7 @@
 
       to {
         opacity: 1;
-        transform: translateY(0)
+        transform: none
       }
     }
 
@@ -171,49 +200,34 @@
     .av-wrap {
       flex-shrink: 0;
       position: relative;
-      cursor: pointer
+      cursor: pointer;
     }
 
     .av-ring {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
+      width: 140px; height: 140px; border-radius: 50%;
       background: var(--grad);
       padding: 3px;
-      transition: transform .2s
+      transition: transform var(--t-fast);
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
     }
-
-    .av-ring:hover {
-      transform: scale(1.04)
-    }
+    .av-ring:hover { transform: scale(1.04); }
 
     .av-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      background: linear-gradient(135deg, #ffd6e7, #c3d5ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 60px
+      width: 100%; height: 100%; border-radius: 50%;
+      border: 4px solid var(--bg);
+      background: var(--bg-2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 60px; overflow: hidden;
     }
 
     .av-plus {
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--blue);
-      border: 2px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 17px;
-      font-weight: 700
+      position: absolute; bottom: 8px; right: 8px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--grad-short);
+      border: 2px solid var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 18px; font-weight: 700;
+      box-shadow: 0 2px 10px rgba(233,30,140,0.4);
     }
 
     .pinfo {
@@ -241,33 +255,31 @@
     }
 
     .bedit {
-      padding: 6px 14px;
+      padding: 7px 16px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      background: var(--wh);
-      transition: background .15s
+      border-radius: 12px;
+      font-size: 13px; font-weight: 700;
+      background: var(--bg-2);
+      color: var(--dark);
+      transition: background var(--t-fast), border-color var(--t-fast);
     }
-
     .bedit:hover {
-      background: #f0f0f0
+      background: var(--bg-hover);
+      border-color: rgba(255,255,255,0.2);
     }
 
     .bmore {
-      width: 32px;
-      height: 32px;
+      width: 34px; height: 34px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      transition: background .15s
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; background: var(--bg-2);
+      color: var(--dark);
+      transition: background var(--t-fast), border-color var(--t-fast);
     }
-
     .bmore:hover {
-      background: #f0f0f0
+      background: var(--bg-hover);
+      border-color: rgba(255,255,255,0.2);
     }
 
     .pstats {
@@ -280,19 +292,9 @@
       cursor: pointer
     }
 
-    .stat:hover .snum {
-      color: var(--blue)
-    }
-
-    .snum {
-      font-size: 16px;
-      font-weight: 800;
-      margin-right: 4px
-    }
-
-    .slbl {
-      font-size: 14px
-    }
+    .stat:hover .snum { color: var(--blue); }
+    .snum { font-size: 16px; font-weight: 800; color: var(--dark); margin-right: 4px; }
+    .slbl { font-size: 14px; color: var(--gray); }
 
     .stat-link {
       cursor: pointer;
@@ -309,53 +311,38 @@
     }
 
     .bmore-menu {
-      position: absolute;
-      top: calc(100% + 6px);
-      right: 0;
-      background: #fff;
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: var(--bg-3);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, .12);
-      min-width: 160px;
-      overflow: hidden;
-      opacity: 0;
-      pointer-events: none;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.5), 0 0 0 1px var(--border-glow);
+      min-width: 180px; overflow: hidden;
+      opacity: 0; pointer-events: none;
       transform: translateY(-6px) scale(.97);
       transform-origin: top right;
       transition: opacity .18s ease, transform .18s ease;
-      z-index: 150
+      z-index: 150;
+      backdrop-filter: blur(20px);
     }
-
     .bmore-menu.open {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateY(0) scale(1)
+      opacity: 1; pointer-events: all;
+      transform: translateY(0) scale(1);
     }
 
     .bmitem {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--dark);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background .12s;
-      text-align: left
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 12px 16px;
+      font-size: 14px; font-weight: 600;
+      color: var(--gray);
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: background .12s, color .12s;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
     }
-
-    .bmitem:hover {
-      background: #f5f5f5
-    }
-
-    .bmitem.danger {
-      color: #e00909
-    }
+    .bmitem:last-child { border-bottom: none; }
+    .bmitem:hover { background: var(--bg-hover); color: var(--dark); }
+    .bmitem.danger { color: #f87171; }
+    .bmitem.danger:hover { background: rgba(248,113,113,0.1); }
 
     .bmitem svg {
       width: 17px;
@@ -398,144 +385,80 @@
     }
 
     .hlwrap {
-      display: flex;
-      gap: 20px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding: 16px 0 18px;
+      display: flex; gap: 20px; overflow-x: auto;
+      scrollbar-width: none; padding: 16px 0 18px;
       border-bottom: 1px solid var(--border);
-      animation: up .4s .08s ease both
+      animation: up .4s .08s ease both;
     }
-
-    .hlwrap::-webkit-scrollbar {
-      display: none
-    }
+    .hlwrap::-webkit-scrollbar { display: none; }
 
     .hli {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: transform .15s
+      display: flex; flex-direction: column; align-items: center;
+      gap: 8px; cursor: pointer; flex-shrink: 0; transition: transform var(--t-fast);
     }
-
-    .hli:hover {
-      transform: scale(1.05)
-    }
+    .hli:hover { transform: scale(1.05); }
 
     .hlring {
-      width: 62px;
-      height: 62px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      padding: 2px
+      width: 66px; height: 66px; border-radius: 50%;
+      border: 1.5px solid var(--border); padding: 3px;
+      background: var(--bg-2);
     }
-
-    .hladd .hlring {
-      border: 1px dashed #c7c7c7
-    }
+    .hladd .hlring { border: 2px dashed rgba(255,255,255,0.2); }
 
     .hlin {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px
+      width: 100%; height: 100%; border-radius: 50%;
+      border: 2px solid var(--bg);
+      background: var(--bg-3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; overflow: hidden;
     }
+    .hlin img { width: 100%; height: 100%; object-fit: cover; }
 
     .hlname {
-      font-size: 11px;
-      max-width: 70px;
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap
+      font-size: 12px; font-weight: 600; color: var(--gray);
+      max-width: 74px; text-align: center;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
 
     .tabs {
-      display: flex;
-      justify-content: center;
+      display: flex; justify-content: center;
       border-bottom: 1px solid var(--border);
-      animation: up .4s .12s ease both
+      animation: up .4s .12s ease both;
     }
 
     .tbtn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 13px 22px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--gray);
-      letter-spacing: 1px;
-      border-bottom: 1px solid transparent;
-      margin-bottom: -1px;
-      transition: color .15s, border-color .15s
+      display: flex; align-items: center; gap: 6px;
+      padding: 14px 24px; font-size: 12px; font-weight: 700;
+      color: var(--gray); letter-spacing: 1px; text-transform: uppercase;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color var(--t-fast), border-color var(--t-fast);
     }
-
-    .tbtn.active {
-      color: var(--dark);
-      border-bottom-color: var(--dark)
-    }
-
-    .tbtn:hover {
-      color: var(--dark)
-    }
-
-    .tbtn svg {
-      width: 15px;
-      height: 15px
-    }
+    .tbtn.active { color: var(--dark); border-bottom-color: var(--dark); }
+    .tbtn:hover:not(.active) { color: rgba(240,244,255,0.8); }
+    .tbtn svg { width: 16px; height: 16px; }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
-      margin-top: 3px;
-      animation: up .4s .16s ease both
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 4px;
+      animation: up .4s .16s ease both;
     }
 
     .gi {
-      aspect-ratio: 1;
-      overflow: hidden;
-      position: relative;
-      cursor: pointer
+      aspect-ratio: 1; overflow: hidden; position: relative; cursor: pointer;
+      background: var(--bg-2); border-radius: 4px;
     }
-
     .gf {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 46px;
-      transition: transform .3s
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 46px; transition: transform .4s var(--ease);
     }
-
-    .gi:hover .gf {
-      transform: scale(1.07)
-    }
+    .gi:hover .gf { transform: scale(1.04); }
 
     .gover {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, .32);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      opacity: 0;
-      transition: opacity .2s
+      position: absolute; inset: 0; background: rgba(0,0,0,.5);
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      opacity: 0; transition: opacity .2s var(--ease);
+      backdrop-filter: blur(2px);
     }
-
-    .gi:hover .gover {
-      opacity: 1
-    }
+    .gi:hover .gover { opacity: 1; }
 
     .ostat {
       display: flex;
@@ -602,88 +525,45 @@
     }
 
     .mo {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s;
-      padding: 16px
+      position: fixed; inset: 0; background: rgba(0, 0, 0, .65); backdrop-filter: blur(5px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .22s; padding: 16px;
     }
-
-    .mo.open {
-      opacity: 1;
-      pointer-events: all
-    }
+    .mo.open { opacity: 1; pointer-events: all; }
 
     .mclose {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      color: #fff;
-      font-size: 26px;
-      cursor: pointer;
-      z-index: 201;
-      line-height: 1;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center
+      position: fixed; top: 14px; right: 14px; color: #fff; font-size: 26px;
+      cursor: pointer; z-index: 201; line-height: 1; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center; transition: transform .15s;
     }
+    .mclose:hover { transform: scale(1.1); }
 
     .mbox {
-      background: #fff;
-      border-radius: 4px;
-      overflow: hidden;
-      display: flex;
-      max-width: 860px;
-      width: 100%;
-      max-height: 88vh;
-      animation: pop .22s ease both
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; display: flex; max-width: 1200px; width: 100%; max-height: calc(100vh - 80px); height: calc(100vh - 80px); margin: auto; position: relative;
+      animation: fadeIn .2s ease both; box-shadow: 0 20px 60px rgba(0,0,0,.5);
     }
 
     .mimg {
-      width: 52%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 86px;
-      min-height: 380px
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: #000; border-right: 1px solid var(--border); overflow: hidden;
     }
 
     .mside {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid var(--border);
-      overflow: hidden
+      width: 350px; flex-shrink: 0; display: flex; flex-direction: column;
+      background: var(--bg-2);
     }
 
     .mhead {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
 
     .mav {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      border: 1px solid #efefef;
-      flex-shrink: 0
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; border: 1.5px solid var(--border); flex-shrink: 0;
+      background: var(--bg-2);
     }
 
     .mun {
@@ -702,342 +582,90 @@
 
     .mcmt {
       display: flex;
-      gap: 8px;
-      margin-bottom: 12px
+      width: 36px; height: 36px; border-radius: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; background: var(--bg-3); border: 1px solid var(--border);
     }
-
+    .mun { font-weight: 700; font-size: 14px; color: var(--dark); flex: 1; }
+    
+    .mcmts { flex: 1; overflow-y: auto; padding: 16px; scrollbar-width: none; }
+    .mcmts::-webkit-scrollbar { display: none; }
+    .mcmt { display: flex; gap: 12px; margin-bottom: 16px; }
     .ccav {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      border: 1px solid #efefef;
-      flex-shrink: 0
+      width: 36px; height: 36px; border-radius: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0; background: var(--bg-3); border: 1px solid var(--border);
     }
+    .cctext { font-size: 14px; line-height: 1.4; color: var(--dark); word-break: break-word; white-space: pre-wrap; }
+    .cctext .un { font-weight: 700; cursor: pointer; margin-right: 4px; color: var(--dark); }
+    .ccmeta { font-size: 12px; color: var(--gray); margin-top: 6px; display: flex; gap: 12px; }
+    
+    .mactions { padding: 12px 16px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .mbtns { display: flex; gap: 16px; margin-bottom: 12px; }
+    .mbtn { cursor: pointer; transition: opacity .15s; color: var(--dark); display: flex; align-items: center; justify-content: center; }
+    .mbtn:hover { opacity: .6; }
+    .mbtn svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .mbtn.liked svg { fill: #ed4956; stroke: #ed4956; }
+    .mlikes { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: var(--dark); }
+    .mdate { font-size: 11px; color: var(--gray); text-transform: uppercase; }
+    
+    .minput { display: flex; border-top: 1px solid var(--border); padding: 12px 16px; align-items: center; }
+    .minput input { flex: 1; border: none; outline: none; background: none; font-size: 14px; color: var(--dark); font-family: 'Inter', sans-serif; }
+    .minput input::placeholder { color: var(--gray); }
+    .minput button { color: var(--blue); font-weight: 700; font-size: 14px; cursor: pointer; margin-left: 12px; transition: opacity .15s; font-family: 'Inter', sans-serif; }
+    .minput button:hover { opacity: .7; }
 
-    .cctext {
-      font-size: 13px;
-      line-height: 1.45;
-      margin-bottom: 3px
-    }
-
-    .cctext .un {
-      font-weight: 700;
-      margin-right: 4px
-    }
-
-    .ccmeta {
-      display: flex;
-      gap: 10px
-    }
-
-    .cctime {
-      font-size: 11px;
-      color: var(--gray)
-    }
-
-    .cclk {
-      font-size: 11px;
-      color: var(--gray);
-      font-weight: 700;
-      cursor: pointer
-    }
-
-    .macts {
-      padding: 10px 12px 4px;
-      border-top: 1px solid var(--border);
-      flex-shrink: 0
-    }
-
-    .mactrow {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px
-    }
-
-    .mab {
-      display: flex;
-      align-items: center;
-      color: var(--dark);
-      transition: transform .15s
-    }
-
-    .mab:hover {
-      transform: scale(1.15)
-    }
-
-    .mab svg {
-      width: 22px;
-      height: 22px
-    }
-
-    .mabm {
-      margin-left: auto
-    }
-
-    .mlikes {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 3px
-    }
-
-    .mcap {
-      font-size: 13px;
-      margin-bottom: 3px
-    }
-
-    .mcap .un {
-      font-weight: 700;
-      margin-right: 4px
-    }
-
-    .mtime {
-      font-size: 11px;
-      color: var(--gray);
-      margin-bottom: 5px;
-      text-transform: uppercase;
-      letter-spacing: .3px
-    }
-
-    .minrow {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-top: 1px solid var(--border);
-      padding: 9px 12px;
-      flex-shrink: 0
-    }
-
-    .minput {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-family: inherit;
-      font-size: 14px;
-      color: var(--dark)
-    }
-
-    .minput::placeholder {
-      color: var(--gray)
-    }
-
-    .mpostbtn {
-      color: var(--blue);
-      font-size: 13px;
-      font-weight: 700;
-      transition: opacity .15s
-    }
-
-    .mpostbtn:hover {
-      opacity: .6
-    }
-
-    /* ── FOLLOWERS / FOLLOWING MODAL ── */
+    /* Follow/Following Modal */
     .fl-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s;
-      padding: 16px
+      position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; z-index: 300;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
     }
-
-    .fl-overlay.open {
-      opacity: 1;
-      pointer-events: all
-    }
-
+    .fl-overlay.open { opacity: 1; pointer-events: all; }
+    
     .fl-box {
-      background: #fff;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 400px;
-      max-height: 82vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: pop .22s ease both
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px;
+      width: 400px; max-width: 90vw; max-height: 400px; display: flex; flex-direction: column;
+      overflow: hidden; animation: pop .2s ease; box-shadow: 0 20px 60px rgba(0,0,0,.5);
     }
-
-    .fl-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0
+    
+    .fl-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
     }
-
-    .fl-title {
-      font-size: 16px;
-      font-weight: 800;
-      flex: 1;
-      text-align: center
-    }
-
-    .fl-close {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: var(--dark);
-      transition: background .15s
-    }
-
-    .fl-close:hover {
-      background: #f0f0f0
-    }
-
-    .fl-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0
-    }
-
-    .fl-tab {
-      flex: 1;
-      padding: 11px 0;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--gray);
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: color .15s, border-color .15s
-    }
-
-    .fl-tab.active {
-      color: var(--dark);
-      border-bottom-color: var(--dark)
-    }
-
-    .fl-tab:hover {
-      color: var(--dark)
-    }
-
+    .fl-title { font-size: 16px; font-weight: 800; color: var(--dark); flex: 1; text-align: center; }
+    .fl-close { font-size: 24px; cursor: pointer; line-height: 1; color: var(--dark); transition: transform .15s; }
+    .fl-close:hover { transform: scale(1.1); }
+    
+    .fl-tabs { display: flex; border-bottom: 1px solid var(--border); }
+    .fl-tab { flex: 1; text-align: center; padding: 12px; font-size: 14px; font-weight: 700; color: var(--gray); cursor: pointer; border-bottom: 1px solid transparent; transition: all .15s; }
+    .fl-tab.active { color: var(--dark); border-bottom-color: var(--dark); }
+    
+    .fl-search-wrap { padding: 12px 16px; border-bottom: 1px solid var(--border); }
     .fl-search {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0
+      width: 100%; background: var(--bg-3); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; font-size: 14px; color: var(--dark); outline: none; font-family: 'Inter', sans-serif;
     }
-
-    .fl-sinput {
-      width: 100%;
-      background: #efefef;
-      border: none;
-      outline: none;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      font-family: 'Nunito', sans-serif;
-      color: var(--dark)
-    }
-
-    .fl-sinput::placeholder {
-      color: var(--gray)
-    }
-
-    .fl-list {
-      overflow-y: auto;
-      flex: 1;
-      scrollbar-width: thin;
-      scrollbar-color: #ddd transparent
-    }
-
-    .fl-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
-      transition: background .15s;
-      cursor: pointer
-    }
-
-    .fl-item:hover {
-      background: #fafafa
-    }
-
-    .fl-av {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      border: 1px solid #efefef
-    }
-
-    .fl-info {
-      flex: 1;
-      min-width: 0
-    }
-
-    .fl-un {
-      font-size: 14px;
-      font-weight: 700;
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap
-    }
-
-    .fl-name {
-      font-size: 13px;
-      color: var(--gray);
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap
-    }
-
-    .fl-btn {
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      flex-shrink: 0;
-      transition: all .15s
-    }
-
-    .fl-btn.follow {
-      background: var(--blue);
-      color: #fff
-    }
-
-    .fl-btn.follow:hover {
-      background: #1877f2
-    }
-
-    .fl-btn.following {
-      background: #efefef;
-      color: var(--dark)
-    }
-
-    .fl-btn.following:hover {
-      background: #e0e0e0
-    }
-
-    .fl-btn.remove {
-      background: #efefef;
-      color: var(--dark)
-    }
-
-    .fl-btn.remove:hover {
-      background: #e0e0e0
-    }
+    .fl-search::placeholder { color: var(--gray); }
+    
+    .fl-list { flex: 1; overflow-y: auto; scrollbar-width: none; }
+    .fl-list::-webkit-scrollbar { display: none; }
+    
+    .fl-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; transition: background .15s; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .fl-item:hover { background: rgba(255,255,255,0.04); }
+    
+    .fl-av { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .fl-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .fl-un { font-size: 14px; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fl-name { font-size: 14px; color: var(--gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .fl-btn { padding: 6px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; text-align: center; }
+    .fl-btn.follow { background: var(--blue); color: #fff; }
+    .fl-btn.follow:hover { background: #1877f2; }
+    .fl-btn.following { background: var(--bg-2); border: 1px solid var(--border); color: var(--dark); }
+    .fl-btn.following:hover { background: var(--bg-hover); }
+    .fl-btn.remove { background: var(--bg-2); border: 1px solid var(--border); color: var(--dark); }
+    .fl-btn.remove:hover { background: rgba(248,113,113,0.1); color: #f87171; border-color: rgba(248,113,113,0.3); }
 
     .fl-empty {
       display: flex;
@@ -1058,31 +686,19 @@
     }
 
     .eo {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s;
-      padding: 16px
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 600; opacity: 0; pointer-events: none;
+      transition: opacity var(--t-mid); padding: 16px;
     }
-
-    .eo.open {
-      opacity: 1;
-      pointer-events: all
-    }
+    .eo.open { opacity: 1; pointer-events: all; }
 
     .ebox {
-      background: #fff;
-      border-radius: 12px;
-      padding: 26px;
-      width: 100%;
-      max-width: 390px;
-      animation: pop .22s ease both
+      background: var(--bg-3); border: 1px solid var(--border);
+      border-radius: var(--r-xl); box-shadow: var(--shadow-lg);
+      padding: 32px 28px; width: 100%; max-width: 420px;
+      animation: pop .22s var(--ease) both;
     }
 
     .etitle {
@@ -1137,21 +753,13 @@
     }
 
     .einput {
-      width: 100%;
-      padding: 8px 11px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'Nunito', sans-serif;
-      outline: none;
-      background: #fafafa;
-      transition: border-color .2s
+      width: 100%; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 12px;
+      font-size: 14px; font-family: 'Inter', sans-serif; outline: none;
+      background: var(--bg-2); color: var(--dark);
+      transition: border-color var(--t-fast);
     }
-
-    .einput:focus {
-      border-color: #a8a8a8;
-      background: #fff
-    }
+    .einput:focus { border-color: var(--blue); }
 
     .eta {
       resize: none;
@@ -1194,42 +802,17 @@
     }
 
     .empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 60px 20px;
-      color: var(--gray)
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      padding: 80px 20px; color: var(--gray); text-align: center;
     }
-
     .empty-icon {
-      width: 62px;
-      height: 62px;
-      border-radius: 50%;
-      border: 2px solid var(--gray);
-      display: flex;
-      align-items: center;
-      justify-content: center
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px dashed var(--border); display: flex; align-items: center; justify-content: center;
+      background: var(--bg-2);
     }
-
-    .empty-icon svg {
-      width: 30px;
-      height: 30px;
-      stroke: var(--gray)
-    }
-
-    .empty-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--dark)
-    }
-
-    .empty-sub {
-      font-size: 14px;
-      text-align: center;
-      max-width: 220px;
-      line-height: 1.5
-    }
+    .empty-icon svg { width: 36px; height: 36px; stroke: var(--gray); }
+    .empty-title { font-size: 24px; font-weight: 800; color: var(--dark); }
+    .empty-sub { font-size: 14px; max-width: 260px; line-height: 1.6; color: var(--text-muted); }
 
     @media(max-width:620px) {
       .ph {
@@ -1267,13 +850,18 @@
       }
 
       .mbox {
-        flex-direction: column
+        flex-direction: column;
+        height: auto;
+        max-height: 90vh;
       }
 
       .mimg {
         width: 100%;
         min-height: 240px;
-        font-size: 60px
+        flex: none;
+      }
+      .mside {
+        width: 100%;
       }
     }
   </style>
@@ -1282,9 +870,9 @@
 <body>
 
   <nav>
-    <span class="logo">Instagram</span>
+    <span class="logo">Socaily</span>
     <div class="nicons">
-      <a href="{% url 'home' %}" class="nibtn" title="Home" data-pjax>
+      <a href="{% url 'home' %}" class="nibtn" title="Home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z" />
           <path d="M9 21V12h6v9" />
@@ -1301,9 +889,9 @@
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
       </a>
-      <a href="{% url 'profile' request.user.username %}" class="navat" title="Profile" data-pjax>
+      <a href="{% url 'profile' request.user.username %}" class="navat" title="Profile">
         {% if request.user.profile and request.user.profile.profile_image %}
-        <img src="{{ request.user.profile.profile_image.url }}" alt="{{ request.user.username }}">
+        <img src="{{ request.user.profile.profile_image.url }}" alt="{{ request.user.username }}" style="width:100%;height:100%;object-fit:cover;">
         {% else %}
         <div style="font-size:13px">🧑</div>
         {% endif %}
@@ -1314,8 +902,14 @@
   <div class="page">
     <div class="ph">
       <!-- Avatar -->
-      <div class="av-wrap">
-        <div class="av-ring">
+      <div class="av-wrap"
+        {% if has_story %}
+           onclick="openStoryViewer('{{ profile_user.username }}', {{ latest_story_id }})"
+        {% elif profile_user == request.user %}
+           onclick="openStoryUpload()"
+        {% endif %}
+      >
+        <div class="av-ring" {% if not has_story %}style="background:transparent;padding:0"{% endif %}>
           <div class="av-inner">
             {% if profile_user.profile and profile_user.profile.profile_image %}
             <img src="{{ profile_user.profile.profile_image.url }}" alt="{{ profile_user.username }}"
@@ -1325,7 +919,7 @@
             {% endif %}
           </div>
         </div>
-        {% if profile_user == request.user %}
+        {% if profile_user == request.user and not has_story %}
         <div class="av-plus">+</div>
         {% endif %}
       </div>
@@ -1336,18 +930,18 @@
           <div class="pbtns">
             {% if profile_user == request.user %}
             {# Own profile — show Edit buttons #}
-            <button class="bedit" onclick="openEdit()">Edit profile</button>
+            <a href="{% url 'profile_edit' %}" class="bedit" style="text-decoration:none;display:inline-block;text-align:center;">Edit profile</a>
             <button class="bedit">View archive</button>
             <div class="bmore-wrap">
               <button class="bmore" id="bmoreBtn" onclick="toggleMoreMenu(event)">⋯</button>
               <div class="bmore-menu" id="bmoreMenu">
-                <button class="bmitem" onclick="openEdit();closeMoreMenu()">
+                <a href="{% url 'profile_edit' %}" class="bmitem" style="text-decoration:none;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
                   Edit profile
-                </button>
+                </a>
                 <form method="POST" action="{% url 'logout' %}">
                   {% csrf_token %}
                   <button type="submit" class="bmitem danger">
@@ -1364,20 +958,23 @@
             {% else %}
             {# Someone else's profile #}
             {% if is_following %}
-            <form method="POST" action="{% url 'follow_user' profile_user.username %}" style="display:inline">
+            <form method="POST" action="{% url 'unfollow_user' profile_user.username %}" style="display:inline" onsubmit="handleFollowToggle(event, this)">
               {% csrf_token %}
-              <button type="submit" class="bedit" style="background:#efefef">Following</button>
+              <button type="submit" class="bedit" style="background:#efefef;color:#262626;border-color:transparent;">Following</button>
             </form>
             {% elif has_sent_request %}
-            <button class="bedit" style="background:#efefef;cursor:default" disabled>Requested</button>
+            <form method="POST" action="{% url 'unfollow_user' profile_user.username %}" style="display:inline" onsubmit="handleFollowToggle(event, this)">
+              {% csrf_token %}
+              <button type="submit" class="bedit" style="background:#efefef;color:#262626;border-color:transparent;">Requested</button>
+            </form>
             {% else %}
-            <form method="POST" action="{% url 'follow_user' profile_user.username %}" style="display:inline">
+            <form method="POST" action="{% url 'follow_user' profile_user.username %}" style="display:inline" onsubmit="handleFollowToggle(event, this)">
               {% csrf_token %}
               <button type="submit" class="bedit"
                 style="background:#0095f6;color:#fff;border-color:#0095f6">Follow</button>
             </form>
             {% endif %}
-            <button class="bedit">Message</button>
+            <a href="{% url 'messages' %}?with={{ profile_user.username }}" class="bedit" style="text-decoration:none;display:inline-block;text-align:center;">Message</a>
             {% endif %}
           </div>
         </div>
@@ -1403,78 +1000,41 @@
       </div>
     </div>
 
-    <div class="hlwrap">
-      <div class="hli hladd">
-        <div class="hlring">
-          <div class="hlin" style="background:#fafafa"><svg viewBox="0 0 24 24" fill="none" stroke="#bbb"
-              stroke-width="1.5" width="26" height="26">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg></div>
-        </div><span class="hlname">New</span>
-      </div>
-      <div class="hli">
-        <div class="hlring">
-          <div class="hlin" style="background:linear-gradient(135deg,#ffd6e7,#ffb3ba)">🌅</div>
-        </div><span class="hlname">Travel</span>
-      </div>
-      <div class="hli">
-        <div class="hlring">
-          <div class="hlin" style="background:linear-gradient(135deg,#c3d5ff,#a8c8ff)">📸</div>
-        </div><span class="hlname">Photography</span>
-      </div>
-      <div class="hli">
-        <div class="hlring">
-          <div class="hlin" style="background:linear-gradient(135deg,#d6ffd8,#b3f0b5)">🌿</div>
-        </div><span class="hlname">Nature</span>
-      </div>
-      <div class="hli">
-        <div class="hlring">
-          <div class="hlin" style="background:linear-gradient(135deg,#fff3b3,#ffe0a8)">☕</div>
-        </div><span class="hlname">Coffee</span>
-      </div>
-      <div class="hli">
-        <div class="hlring">
-          <div class="hlin" style="background:linear-gradient(135deg,#e8d5ff,#d0b0ff)">🎨</div>
-        </div><span class="hlname">Art</span>
-      </div>
-      <div class="hli">
-        <div class="hlring">
-          <div class="hlin" style="background:linear-gradient(135deg,#ffecd2,#fcb69f)">🍕</div>
-        </div><span class="hlname">Food</span>
-      </div>
-    </div>
-
+    {# Highlight section temporarily removed as it was dummy data #}
     <div class="tabs">
-      <button class="tbtn active" onclick="showTab('posts',this)">
+      <a href="{% url 'profile' profile_user.username %}" class="tbtn active" style="text-decoration:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="7" height="7" />
           <rect x="14" y="3" width="7" height="7" />
           <rect x="3" y="14" width="7" height="7" />
           <rect x="14" y="14" width="7" height="7" />
         </svg>POSTS
-      </button>
-      <button class="tbtn" onclick="showTab('reels',this)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="5 3 19 12 5 21 5 3" />
-        </svg>REELS
-      </button>
-      <button class="tbtn" onclick="showTab('saved',this)">
+      </a>
+
+      {% if request.user == profile_user %}
+      <a href="{% url 'saved_posts' %}" class="tbtn" style="text-decoration:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
         </svg>SAVED
-      </button>
-      <button class="tbtn" onclick="showTab('tagged',this)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-          <line x1="7" y1="7" x2="7.01" y2="7" />
-        </svg>TAGGED
-      </button>
+      </a>
+      {% endif %}
     </div>
     {# ── Post Grid (real posts from DB) ── #}
     <div class="grid" id="grid">
+      {% if not can_see_posts %}
+      <div class="empty" style="grid-column: 1 / -1;">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <div class="empty-title">This Account is Private</div>
+        <div class="empty-sub">Follow to see their photos and videos.</div>
+      </div>
+      {% else %}
       {% for post in posts %}
-      <div class="gi" onclick="openPost('{{ post.id }}')">
+      <div class="gi" id="gi-{{ post.id }}" onclick="openPostModal({{ post.id }})">
         {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.caption|truncatechars:40 }}"
           style="width:100%;height:100%;object-fit:cover;">
@@ -1497,6 +1057,7 @@
           </div>
         </div>
       </div>
+
       {% empty %}
       <div class="empty" style="grid-column:1/-1">
         <div class="empty-icon">
@@ -1510,19 +1071,143 @@
         <div class="empty-sub">When {{ profile_user.username }} shares photos, they'll appear here.</div>
       </div>
       {% endfor %}
+      {% endif %}
     </div>
   </div>
 
-  <!-- POST MODAL -->
-  <div class="mo" id="postMo" onclick="if(event.target===this)closePM()">
-    <div class="mclose" onclick="closePM()">✕</div>
-    <div class="mbox" id="mbox"></div>
-  </div>
+
+
+
+  <!-- MODALS PLACED OUTSIDE THE GRID -->
+  {% for post in posts %}
+      <!-- Post Modal -->
+      <div class="mo" id="postModal{{ post.id }}" onclick="closePostModal({{ post.id }})">
+        <div onclick="closePostModal({{ post.id }})" style="position: absolute; top: 16px; right: 16px; cursor: pointer; z-index: 300; padding: 8px;">
+          <svg aria-label="Close" color="#ffffff" fill="#ffffff" height="24" viewBox="0 0 48 48" width="24">
+            <path clip-rule="evenodd" d="M41.8 9.8L27.5 24l14.2 14.2c.6.6.6 1.5 0 2.1l-1.4 1.4c-.6.6-1.5.6-2.1 0L24 27.5 9.8 41.8c-.6.6-1.5.6-2.1 0l-1.4-1.4c-.6-.6-.6-1.5 0-2.1L20.5 24 6.2 9.8c-.6-.6-.6-1.5 0-2.1l1.4-1.4c.6-.6 1.5-.6 2.1 0L24 20.5 38.2 6.2c.6-.6 1.5-.6 2.1 0l1.4 1.4c.6.6.6 1.6 0 2.2z" fill-rule="evenodd"></path>
+          </svg>
+        </div>
+        <div class="mbox post" onclick="event.stopPropagation()" data-post-id="{{ post.id }}">
+          <div class="mimg" style="background:#000;">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" style="width:100%; height:100%; object-fit:contain;">
+            {% else %}
+            <div class="gf c{{ forloop.counter|add:0 }}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px">📷</div>
+            {% endif %}
+          </div>
+          <div class="mside">
+            <!-- Header -->
+            <div class="mhead">
+              <a href="{% url 'profile' post.user.username %}" class="mav" style="text-decoration:none;">
+                {% if post.user.profile and post.user.profile.profile_image %}
+                <img src="{{ post.user.profile.profile_image.url }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+                {% else %}
+                🧑
+                {% endif %}
+              </a>
+              <a href="{% url 'profile' post.user.username %}" class="mun" style="text-decoration:none;color:inherit;">
+                {{ post.user.username }}
+              </a>
+              
+              <!-- 3 Dot Menu -->
+              <div style="position:relative; margin-left:auto;">
+                <button onclick="toggleModalMenu(event, {{ post.id }})" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+                  </svg>
+                </button>
+                <div id="modalMenu{{ post.id }}" style="display:none;position:absolute;right:0;top:100%;background:var(--bg-3);border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:300;min-width:180px;overflow:hidden;backdrop-filter:blur(10px);">
+                  <button onclick="openShareSheet({{ post.id }}); toggleModalMenu(event, {{ post.id }});" style="display:block;width:100%;text-align:left;padding:14px 16px;font-size:14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;font-weight:600;color:var(--dark);transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">🔗 Copy link</button>
+                  <button onclick="openShareDM({{ post.id }}); toggleModalMenu(event, {{ post.id }});" style="display:block;width:100%;text-align:left;padding:14px 16px;font-size:14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;font-weight:600;color:var(--dark);transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">✉️ Send via DM</button>
+                  {% if request.user == post.user %}
+                  <button class="edit-btn" onclick="closePostModal({{ post.id }}); openEditPost({{ post.id }}, '{{ post.caption|escapejs }}', '{{ post.location|escapejs }}');" style="display:block;width:100%;text-align:center;padding:14px;font-size:14px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;font-weight:600;color:var(--dark);transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">Edit</button>
+                  <button onclick="closePostModal({{ post.id }}); confirmDeletePost({{ post.id }});" style="display:block;width:100%;text-align:center;padding:14px;font-size:14px;color:#f87171;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;font-weight:700;transition:background 0.15s;" onmouseover="this.style.background='rgba(248,113,113,0.1)'" onmouseout="this.style.background='none'">Delete</button>
+                  {% endif %}
+                  <button onclick="closePostModal({{ post.id }})" style="display:block;width:100%;text-align:center;padding:14px;font-size:14px;background:none;border:none;cursor:pointer;font-weight:500;color:var(--gray);transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">Cancel</button>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Comments & Caption -->
+            <div class="mcmts" id="cmt{{ post.id }}">
+              {% if post.caption %}
+              <div class="mcmt caption-row">
+                <div class="ccav">
+                  {% if post.user.profile and post.user.profile.profile_image %}
+                  <img src="{{ post.user.profile.profile_image.url }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+                  {% else %}🧑{% endif %}
+                </div>
+                <div>
+                  <div class="cctext pcap"><span class="un">{{ post.user.username }}</span> {{ post.caption }}</div>
+                  <div class="ccmeta"><span class="cctime">{{ post.created_at|timesince }} ago</span></div>
+                </div>
+              </div>
+              {% else %}
+              <div class="mcmt caption-row" style="display:none;">
+                <div class="ccav">
+                  {% if post.user.profile and post.user.profile.profile_image %}
+                  <img src="{{ post.user.profile.profile_image.url }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+                  {% else %}🧑{% endif %}
+                </div>
+                <div>
+                  <div class="cctext pcap"><span class="un">{{ post.user.username }}</span> </div>
+                  <div class="ccmeta"><span class="cctime">{{ post.created_at|timesince }} ago</span></div>
+                </div>
+              </div>
+              {% endif %}
+              
+              {% for comment in post.comments.all %}
+              <div class="mcmt">
+                <div class="ccav">
+                  {% if comment.user.profile and comment.user.profile.profile_image %}
+                  <img src="{{ comment.user.profile.profile_image.url }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+                  {% else %}🧑{% endif %}
+                </div>
+                <div>
+                  <div class="cctext"><span class="un">{{ comment.user.username }}</span> {{ comment.text }}</div>
+                  <div class="ccmeta"><span class="cctime">{{ comment.created_at|timesince }} ago</span></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Actions -->
+            <div class="macts">
+              <div class="mactrow pac">
+                <form method="POST" action="{% url 'like_post' post.id %}" class="like-form" style="display:inline-block;">
+                  {% csrf_token %}
+                  <button type="submit" class="mab" title="Like" style="background:none;border:none;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" fill="{% if post.id in liked_ids %}#ff3040{% else %}none{% endif %}" stroke="{% if post.id in liked_ids %}#ff3040{% else %}currentColor{% endif %}" stroke-width="1.8">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                  </button>
+                </form>
+                <button class="mab" title="Comment" style="background:none;border:none;cursor:pointer;" onclick="document.getElementById('cinput-{{ post.id }}').focus()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="mlikes plikes">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</div>
+              <div class="mtime">{{ post.created_at|date:"F d, Y" }}</div>
+            </div>
+
+            <!-- Add Comment -->
+            <form method="POST" action="{% url 'add_comment' post.id %}" class="minput">
+              {% csrf_token %}
+              <input id="cinput-{{ post.id }}" class="cinput" type="text" name="text" placeholder="Add a comment..." autocomplete="off" required>
+              <button type="submit" class="mpostbtn postbtn" style="background:none;border:none;cursor:pointer;">Post</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  {% endfor %}
 
   <!-- FOLLOWERS / FOLLOWING MODAL -->
   <div class="fl-overlay" id="flOverlay" onclick="if(event.target===this)closeFL()">
     <div class="fl-box">
-      <div class="fl-header">
+      <div class="fl-head">
         <div style="width:28px"></div>
         <span class="fl-title" id="flTitle">Followers</span>
         <button class="fl-close" onclick="closeFL()">✕</button>
@@ -1531,32 +1216,10 @@
         <button class="fl-tab active" id="flTab0" onclick="switchFLTab('followers')">Followers</button>
         <button class="fl-tab" id="flTab1" onclick="switchFLTab('following')">Following</button>
       </div>
-      <div class="fl-search">
-        <input class="fl-sinput" id="flSearch" type="text" placeholder="Search" oninput="filterFL()">
+      <div class="fl-search-wrap">
+        <input class="fl-search" id="flSearch" type="text" placeholder="Search" oninput="filterFL()">
       </div>
       <div class="fl-list" id="flList"></div>
-    </div>
-  </div>
-
-  <!-- EDIT MODAL -->
-  <div class="eo" id="editMo" onclick="if(event.target===this)closeEM()">
-    <div class="ebox" onclick="event.stopPropagation()">
-      <div class="etitle">Edit Profile</div>
-      <div class="eavrow">
-        <div class="eav" id="editAv" onclick="cycleAv()">🧑</div>
-      </div>
-      <div class="eavbtn" onclick="cycleAv()">Change profile photo</div>
-      <div class="efi"><label class="elbl">Name</label><input class="einput" id="eName" value="Your Name ✨"></div>
-      <div class="efi"><label class="elbl">Username</label><input class="einput" id="eUser" value="your_username"
-          oninput="this.value=this.value.replace(/[^a-z0-9._]/gi,'').toLowerCase()"></div>
-      <div class="efi"><label class="elbl">Bio</label><textarea class="einput eta"
-          id="eBio">📸 Capturing moments that matter 🌍 Traveller | 🎨 Artist | ☕ Coffee addict</textarea></div>
-      <div class="efi"><label class="elbl">Website</label><input class="einput" id="eLink" value="linktr.ee/yourname">
-      </div>
-      <div class="ebtns">
-        <button class="ecancel" onclick="closeEM()">Cancel</button>
-        <button class="esave" onclick="saveProfile()">Save</button>
-      </div>
     </div>
   </div>
 
@@ -1629,8 +1292,8 @@
         const avHTML = u.av.startsWith('<img') ? `<div class="fl-av" style="background:${u.bg};overflow:hidden;padding:0">${u.av}</div>` :
           `<div class="fl-av" style="background:${u.bg}">${u.av}</div>`;
         const btnHTML = currentFLTab === 'following'
-          ? `<a href="/profile/${u.un}/" class="fl-btn following" style="text-decoration:none">Following</a>`
-          : `<a href="/profile/${u.un}/" class="fl-btn follow" style="text-decoration:none">View</a>`;
+          ? `<div class="fl-btn following" style="text-decoration:none">Following</div>`
+          : `<div class="fl-btn follow" style="text-decoration:none">View</div>`;
         return `<a href="/profile/${u.un}/" class="fl-item" style="text-decoration:none;color:inherit">
           ${avHTML}
           <div class="fl-info">
@@ -1642,79 +1305,9 @@
       }).join('');
     }
 
-    /* ── Post Modal (simplified for server-rendered posts) ── */
-    let liked = false;
-
-    function openPost(id) {
-      // For now just scroll to post or open a simple overlay
-      // Full post detail modal can be implemented with a separate view
-      document.getElementById('postMo').classList.add('open');
-      document.body.style.overflow = 'hidden';
-      document.getElementById('mbox').innerHTML = `
-    <div class="mimg" style="background:linear-gradient(135deg,#a8edea,#fed6e3)">📸</div>
-    <div class="mside">
-      <div class="mhead">
-        <div class="mav" style="background:linear-gradient(135deg,#a8edea,#fed6e3)">🧑</div>
-        <span class="mun">{{ profile_user.username }}</span>
-        <button style="font-size:18px;color:var(--gray);padding:4px;cursor:pointer">•••</button>
-      </div>
-      <div class="mcmts" style="display:flex;align-items:center;justify-content:center;color:#8e8e8e;font-size:14px">
-        Loading post details…
-      </div>
-      <div class="minrow">
-        <input class="minput" placeholder="Add a comment…">
-        <button class="mpostbtn">Post</button>
-      </div>
-    </div>`;
-    }
 
 
 
-    function toggleLike(base) {
-      liked = !liked;
-      const btn = document.getElementById('mlbtn');
-      const svg = btn.querySelector('svg');
-      svg.setAttribute('fill', liked ? '#ff3040' : 'none');
-      svg.setAttribute('stroke', liked ? '#ff3040' : 'currentColor');
-      btn.style.transform = 'scale(1.4)';
-      setTimeout(() => btn.style.transform = '', 200);
-      document.getElementById('mlikesEl').textContent = fn(base + (liked ? 1 : 0)) + ' likes';
-    }
-
-    function closePM() {
-      document.getElementById('postMo').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function openEdit() {
-      document.getElementById('editMo').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeEM() {
-      document.getElementById('editMo').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function saveProfile() {
-      const n = document.getElementById('eName').value.trim();
-      const u = document.getElementById('eUser').value.trim();
-      const b = document.getElementById('eBio').value.trim();
-      const l = document.getElementById('eLink').value.trim();
-      if (n) document.getElementById('dispName').textContent = n;
-      if (u) { document.getElementById('dispUser').textContent = u; document.title = 'Instagram • ' + u; }
-      if (b) document.getElementById('dispBio').innerHTML = b.replace(/\n/g, '<br>');
-      if (l) document.getElementById('dispLink').lastChild.textContent = ' ' + l;
-      closeEM();
-    }
-
-    function cycleAv() {
-      avIdx = (avIdx + 1) % avList.length;
-      const e = avList[avIdx];
-      document.getElementById('editAv').textContent = e;
-      document.getElementById('mainAv').textContent = e;
-      document.getElementById('navAv').textContent = e;
-    }
 
     function toggleMoreMenu(e) {
       e.stopPropagation();
@@ -1737,7 +1330,7 @@
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
         // Replace with your actual logout URL e.g. window.location.href='/logout/';
-        alert('Logged out! (Replace this with your actual logout redirect.)');
+        window.location.href = "{% url 'logout' %}";
       }, 1200);
     }
 
@@ -1746,91 +1339,95 @@
       const btn = document.getElementById('bmoreBtn');
       if (menu && !menu.contains(e.target) && e.target !== btn) closeMoreMenu();
     });
+
+    function openPostModal(pid) {
+      document.getElementById('postModal' + pid).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePostModal(pid) {
+      document.getElementById('postModal' + pid).classList.remove('open');
+      document.body.style.overflow = '';
+      var m = document.getElementById('modalMenu' + pid);
+      if(m) m.style.display = 'none';
+    }
+    function toggleModalMenu(e, pid) {
+      e.stopPropagation();
+      var m = document.getElementById('modalMenu' + pid);
+      if(m) {
+        m.style.display = (m.style.display === 'none') ? 'block' : 'none';
+      }
+    }
   </script>
 
-  <!-- ══ PJAX: Smooth navigation without full page reload ══ -->
+  <div id="toast" style="visibility:hidden;min-width:250px;background-color:#333;color:#fff;text-align:center;border-radius:8px;padding:12px;position:fixed;z-index:9000;left:50%;bottom:30px;transform:translateX(-50%);font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:visibility 0s linear 0.3s, opacity 0.3s, bottom 0.3s;opacity:0;"></div>
+  
+  <style>
+    #toast.show {
+      visibility:visible;
+      opacity:1;
+      bottom:50px;
+      transition:visibility 0s linear 0s, opacity 0.3s, bottom 0.3s;
+    }
+  </style>
+
+  {% include "partials/story_upload_modal.html" %}
+  {% include "partials/story_viewer.html" %}
+  {% include "partials/edit_post_modal.html" %}
+  {% include "partials/share_modal.html" %}
+
   <script>
-    (function () {
-      function makeBar() {
-        var b = document.getElementById('pjax-bar');
-        if (!b) {
-          b = document.createElement('div');
-          b.id = 'pjax-bar';
-          b.style.cssText = 'position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#0095f6,#c13584);z-index:99999;transition:width .3s ease,opacity .3s ease;border-radius:0 2px 2px 0;pointer-events:none';
-          document.body.appendChild(b);
+    function handleFollowToggle(e, form) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type="submit"]');
+      var originalText = btn.innerText;
+      var url = form.getAttribute('action');
+      var isUnfollow = url.includes('unfollow');
+
+      btn.style.opacity = '0.7';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': getCsrfToken()
         }
-        return b;
-      }
-      function showBar() { var b = makeBar(); b.style.opacity = '1'; b.style.width = '65%'; }
-      function doneBar() { var b = makeBar(); b.style.width = '100%'; setTimeout(function () { b.style.opacity = '0'; setTimeout(function () { b.style.width = '0'; }, 300); }, 200); }
-
-      window._pjaxLoading = false;
-      window.pjaxLoad = function (url) {
-        if (window._pjaxLoading || url === window.location.href) return;
-        window._pjaxLoading = true;
-        showBar();
-        document.body.style.opacity = '0.85';
-        document.body.style.transition = 'opacity 0.15s';
-
-        fetch(url, { credentials: 'same-origin' })
-          .then(function (r) { return r.text(); })
-          .then(function (html) {
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
-
-            var existingStyles = Array.from(document.head.querySelectorAll('style')).map(function (s) { return s.textContent.trim(); });
-            doc.head.querySelectorAll('style').forEach(function (newStyle) {
-              var txt = newStyle.textContent.trim();
-              if (!existingStyles.includes(txt)) {
-                var clone = document.createElement('style');
-                clone.textContent = txt;
-                document.head.appendChild(clone);
-              }
-            });
-
-            document.body.innerHTML = doc.body.innerHTML;
-            document.title = doc.title;
-            history.pushState({ pjax: url }, doc.title, url);
-
-            document.body.querySelectorAll('script').forEach(function (old) {
-              if (old.src) return;
-              var s = document.createElement('script');
-              s.textContent = old.textContent;
-              document.head.appendChild(s);
-            });
-
-            doneBar();
-            document.body.style.opacity = '1';
-            window.scrollTo(0, 0);
-            window._pjaxLoading = false;
-            attachPjax();
-          })
-          .catch(function () {
-            window._pjaxLoading = false;
-            window.location.href = url;
-          });
-      };
-
-      function attachPjax() {
-        document.removeEventListener('click', handlePjaxClick);
-        document.addEventListener('click', handlePjaxClick);
-      }
-      function handlePjaxClick(e) {
-        var a = e.target.closest('[data-pjax]');
-        if (!a || !a.href) return;
-        try { var u = new URL(a.href); if (u.origin !== window.location.origin) return; }
-        catch (ex) { return; }
-        e.preventDefault();
-        window.pjaxLoad(a.href);
-      }
-
-      window.addEventListener('popstate', function () {
-        window.pjaxLoad(window.location.href);
+      })
+      .then(checkResponse)
+      .then(data => {
+        btn.style.opacity = '1';
+        if (isUnfollow) {
+          // Changed to "Follow"
+          form.setAttribute('action', url.replace('unfollow_user', 'follow_user'));
+          btn.innerText = 'Follow';
+          btn.style.background = '#0095f6';
+          btn.style.color = '#fff';
+          btn.style.borderColor = '#0095f6';
+        } else {
+          // Changed to "Following" or "Requested"
+          form.setAttribute('action', url.replace('follow_user', 'unfollow_user'));
+          if (data.status === 'requested') {
+            btn.innerText = 'Requested';
+          } else {
+            btn.innerText = 'Following';
+          }
+          btn.style.background = '#efefef';
+          btn.style.color = '#262626';
+          btn.style.borderColor = '#dbdbdb';
+        }
+      })
+      .catch(err => {
+        console.error('Follow toggle error:', err);
+        btn.style.opacity = '1';
+        showToast('Error updating follow status.');
       });
-
-      attachPjax();
-    })();
+    }
   </script>
+  <script src="{% static 'js/ajax.js' %}"></script>
+  <script src="{% static 'js/homepage.js' %}"></script>
+  <script src="{% static 'js/feed.js' %}"></script>
+  <script src="{% static 'js/stories.js' %}"></script>
+  <script src="{% static 'js/share.js' %}"></script>
+  <script src="{% static 'js/notifications.js' %}"></script>
 
 </body>
 

@@ -1,0 +1,99 @@
+/* ============================================================
+   static/css/notifications.css
+   Socaily – Dark Notification Styles
+   ============================================================ */
+
+/* ── Dropdown container ── */
+#notifDrop {
+  background: var(--bg-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--border-glow) !important;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+/* ── Header in dropdown ── */
+#notifDrop > div:first-child {
+  background: var(--bg-3) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Notification item ── */
+.notif-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  transition: background var(--t-fast);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--bg-hover); }
+
+/* ── Notification avatar ── */
+.notif-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  border: 1.5px solid var(--border);
+  background: var(--bg-2);
+  overflow: hidden;
+}
+.notif-av img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 50%;
+}
+
+/* ── Notification text ── */
+.notif-text { flex: 1; font-size: 13px; line-height: 1.45; color: var(--text-secondary); }
+.notif-text .nun { font-weight: 700; color: var(--text-primary); }
+.notif-time { font-size: 11px; color: var(--text-muted); display: block; margin-top: 3px; }
+
+/* ── Thumbnail ── */
+.notif-thumb {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: var(--r-sm); overflow: hidden;
+  background: var(--bg-2);
+}
+.notif-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── Section label ── */
+.notif-section {
+  padding: 10px 16px 6px;
+  font-size: 11px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px;
+  background: var(--bg-3);
+}
+
+/* ── Follow button inside notification ── */
+.notif-follow-btn {
+  padding: 7px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0; transition: all var(--t-fast);
+  cursor: pointer; border: none; font-family: inherit;
+}
+.notif-follow-btn.follow {
+  background: var(--grad-short);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(233,30,140,0.3);
+}
+.notif-follow-btn.follow:hover {
+  opacity: .85; transform: scale(1.03);
+}
+.notif-follow-btn.following {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.notif-follow-btn.following:hover {
+  background: var(--bg-2); color: var(--text-primary);
+}
+
+/* ── Empty state ── */
+#notifDrop .notif-empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}

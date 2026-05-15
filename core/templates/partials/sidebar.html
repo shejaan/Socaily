@@ -1,0 +1,43 @@
+<!-- ================================================================
+   partials/sidebar.html
+   Requires: request.user, suggested_users, following_ids,
+             follower_ids, sent_request_ids
+   ================================================================ -->
+<aside class="sb">
+
+  {# ── Logged-in user card ── #}
+  <div class="sbu">
+    <a href="{% url 'profile' request.user.username %}" class="sbav">
+      {% if request.user.profile and request.user.profile.profile_image %}
+      <img src="{{ request.user.profile.profile_image.url }}" alt="{{ request.user.username }}">
+      {% else %}
+      <div class="sbav-placeholder">🧑</div>
+      {% endif %}
+    </a>
+    <div class="sbui">
+      <a href="{% url 'profile' request.user.username %}" class="sbun">{{ request.user.username }}</a>
+      <span class="sbn">{{ request.user.get_full_name }}</span>
+    </div>
+    <form method="POST" action="{% url 'logout' %}" style="display:inline">
+      {% csrf_token %}
+      <button type="submit" class="swbtn">Log out</button>
+    </form>
+  </div>
+
+  {# ── Suggested Users ── #}
+  {% if suggested_users %}
+  <div class="sb-suggest-card">
+    {% include "partials/suggested_users.html" %}
+  </div>
+  {% endif %}
+
+  {# ── Footer ── #}
+  <div class="sbft">
+    <div style="display:flex;flex-wrap:wrap;gap:4px 8px;margin-bottom:6px">
+      <a href="#">About</a>&middot;<a href="#">Help</a>&middot;<a href="#">Privacy</a>&middot;
+      <a href="#">Terms</a>&middot;<a href="#">Language</a>
+    </div>
+    <div>&copy; 2026 Socaily by Shejaan</div>
+  </div>
+
+</aside>

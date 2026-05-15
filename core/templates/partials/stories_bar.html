@@ -1,0 +1,51 @@
+<!-- ================================================================
+   partials/stories_bar.html
+   Requires: story_users, request.user
+   ================================================================ -->
+<div class="sbar">
+
+  {# Your own story #}
+  {% if has_own_story %}
+    <div class="sit" onclick="openStoryViewer('{{ request.user.username }}', {{ own_latest_story_id }})" style="cursor:pointer" title="View your story">
+      <div class="sring">
+        <div class="sri">
+          {% if request.user.profile and request.user.profile.profile_image %}
+            <img src="{{ request.user.profile.profile_image.url }}" alt="">
+          {% else %}
+            <div style="font-size:24px;display:flex;align-items:center;justify-content:center;height:100%">🧑</div>
+          {% endif %}
+        </div>
+      </div>
+      <span class="sname">Your story</span>
+    </div>
+  {% else %}
+    <div class="sit" onclick="openStoryUpload()" style="cursor:pointer" title="Add your story">
+      <div class="sadd">
+        {% if request.user.profile and request.user.profile.profile_image %}
+          <img src="{{ request.user.profile.profile_image.url }}" alt="">
+        {% else %}
+          <div style="font-size:24px">🧑</div>
+        {% endif %}
+        <div class="saddbadge">+</div>
+      </div>
+      <span class="sname">Your story</span>
+    </div>
+  {% endif %}
+
+  {# Following users' stories #}
+  {% for story_user in story_users %}
+    <div class="sit" onclick="openStoryViewer('{{ story_user.username }}', {{ story_user.latest_story_id }})" style="cursor:pointer">
+      <div class="sring {% if story_user.story_seen %}seen{% endif %}">
+        <div class="sri">
+          {% if story_user.profile and story_user.profile.profile_image %}
+            <img src="{{ story_user.profile.profile_image.url }}" alt="{{ story_user.username }}">
+          {% else %}
+            🧑
+          {% endif %}
+        </div>
+      </div>
+      <span class="sname">{{ story_user.username }}</span>
+    </div>
+  {% endfor %}
+
+</div>

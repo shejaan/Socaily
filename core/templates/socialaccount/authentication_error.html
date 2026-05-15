@@ -1,0 +1,56 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socaily • Login Error</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --grad-short: linear-gradient(135deg, #e91e8c, #3f5efb);
+      --border: rgba(255,255,255,0.08);
+      --gray: #94a3b8;
+      --dark: #f0f4ff;
+      --bg: #07090f;
+      --panel-bg: rgba(17, 24, 39, 0.9);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 16px;
+    }
+    .panel {
+      background: var(--panel-bg); border: 1px solid var(--border); border-radius: 20px;
+      padding: 40px 40px 28px; backdrop-filter: blur(20px); box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      width: 350px; max-width: 100%; text-align: center;
+    }
+    .error-title {
+      font-size: 20px; font-weight: 800; margin-bottom: 16px; color: #f87171;
+    }
+    .tagline {
+      font-size: 14px; color: var(--gray); margin-bottom: 24px; line-height: 1.5;
+    }
+    .btn {
+      width: 100%; padding: 12px 16px; background: var(--grad-short); color: #fff; border-radius: 12px;
+      font-size: 15px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="panel">
+      <div class="error-title">Login Failed</div>
+      <p class="tagline">An error occurred while attempting to login via your third-party account.</p>
+      <a href="{% url 'login' %}" class="btn">Try Again</a>
+    </div>
+  </main>
+</body>
+</html>

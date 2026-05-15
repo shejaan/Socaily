@@ -3,12 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search • Instagram</title>
-<link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Search • Socaily</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#0095f6;--border:#dbdbdb;--gray:#8e8e8e;--dark:#262626;--bg:#fafafa;--wh:#fff;--nav:56px}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+:root {
+  --grad: linear-gradient(135deg, #f7b733, #f56b2a, #e91e8c, #9b27af, #3f5efb, #00c6ff);
+  --blue: #4f8ef7;
+  --border: rgba(255,255,255,0.07);
+  --gray: #94a3b8;
+  --dark: #f0f4ff;
+  --bg: #07090f;
+  --wh: #111827;
+  --bg-2: #0d111c;
+  --bg-3: #131929;
+  --nav: 64px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
 button{cursor:pointer;border:none;background:none;font-family:inherit}
 input{font-family:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -17,46 +28,48 @@ input{font-family:inherit}
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;height:var(--nav);
-  background:var(--wh);border-bottom:1px solid var(--border);
+  background:rgba(7,9,15,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px;
   padding:0 16px;z-index:100;
 }
 .nav-back{
-  width:36px;height:36px;border-radius:50%;
+  width:40px;height:40px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  transition:background .15s;flex-shrink:0;
+  transition:background .15s;flex-shrink:0;color:var(--dark);
 }
-.nav-back:hover{background:#f0f0f0}
-.nav-back svg{width:22px;height:22px;stroke:var(--dark);fill:none;stroke-width:2}
-.nav-title{font-size:18px;font-weight:800;flex:1}
+.nav-back:hover{background:rgba(255,255,255,0.06)}
+.nav-back svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+.nav-title{font-size:18px;font-weight:800;flex:1;color:var(--dark)}
 
 /* ── SEARCH BOX ── */
 .search-box{
   padding:12px 16px;
-  position:sticky;top:var(--nav);background:var(--wh);
+  position:sticky;top:var(--nav);background:var(--bg);
   border-bottom:1px solid var(--border);z-index:90;
 }
 .input-wrap{
   display:flex;align-items:center;gap:10px;
-  background:#efefef;border-radius:10px;
-  padding:10px 14px;transition:background .2s;
+  background:var(--bg-2);border-radius:12px;
+  padding:10px 14px;transition:background .2s, border-color .2s;
+  border:1px solid var(--border);
 }
-.input-wrap:focus-within{background:#e8e8e8}
-.input-wrap svg{flex-shrink:0;transition:opacity .2s}
+.input-wrap:focus-within{border-color:var(--blue);background:var(--bg-3);}
+.input-wrap svg{flex-shrink:0;transition:opacity .2s;stroke:var(--gray);}
 .input-wrap input{
   flex:1;border:none;background:none;outline:none;
-  font-size:15px;color:var(--dark);
+  font-size:15px;color:var(--dark);font-family:'Inter',sans-serif;
 }
 .input-wrap input::placeholder{color:var(--gray)}
 .clear-btn{
   width:20px;height:20px;border-radius:50%;
-  background:#aaa;color:#fff;
+  background:var(--gray);color:#fff;
   display:none;align-items:center;justify-content:center;
   font-size:12px;font-weight:700;flex-shrink:0;
   cursor:pointer;transition:background .15s;
 }
 .clear-btn.show{display:flex}
-.clear-btn:hover{background:#888}
+.clear-btn:hover{background:#fff;color:var(--bg)}
 
 /* ── CONTENT ── */
 .content{padding-top:calc(var(--nav));display:flex;flex-direction:column}
@@ -68,18 +81,21 @@ nav{
 /* ── USER ITEM ── */
 .user-item{
   display:flex;align-items:center;gap:14px;
-  padding:10px 16px;cursor:pointer;
+  padding:12px 16px;cursor:pointer;
   transition:background .15s;
   animation:fadeUp .2s ease both;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
-.user-item:hover{background:#f5f5f5}
+.user-item:hover{background:rgba(255,255,255,0.06)}
 .user-av{
   width:52px;height:52px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-size:24px;flex-shrink:0;
+  overflow:hidden;border:1.5px solid var(--border);
+  background:var(--bg-2);
 }
 .user-info{flex:1;min-width:0}
-.user-un{font-size:14px;font-weight:700;display:block;margin-bottom:2px}
+.user-un{font-size:14px;font-weight:700;display:block;margin-bottom:2px;color:var(--dark)}
 .user-name{font-size:13px;color:var(--gray);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-meta{font-size:12px;color:var(--gray);margin-top:2px;display:block}
 .chevron{color:var(--gray)}
@@ -88,29 +104,30 @@ nav{
 /* ── STATES ── */
 .empty-state{
   display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:12px;
-  padding:60px 20px;animation:fadeIn .3s ease both;
+  justify-content:center;gap:16px;
+  padding:80px 20px;animation:fadeIn .3s ease both;
 }
 .empty-icon{
-  width:64px;height:64px;border-radius:50%;
-  border:2px solid var(--gray);
+  width:80px;height:80px;border-radius:50%;
+  border:2px dashed var(--gray);
   display:flex;align-items:center;justify-content:center;
+  background:var(--bg-2);
 }
-.empty-icon svg{width:28px;height:28px;stroke:var(--gray);fill:none;stroke-width:1.5}
-.empty-title{font-size:18px;font-weight:800;color:var(--dark)}
-.empty-sub{font-size:14px;color:var(--gray);text-align:center;line-height:1.5;max-width:240px}
+.empty-icon svg{width:36px;height:36px;stroke:var(--gray);fill:none;stroke-width:1.5}
+.empty-title{font-size:20px;font-weight:800;color:var(--dark)}
+.empty-sub{font-size:14px;color:var(--gray);text-align:center;line-height:1.6;max-width:260px}
 
 /* highlight matched text */
-.hl{color:var(--dark)}
+.hl{color:var(--blue);font-weight:700;}
 
 /* recent item remove btn */
 .remove-btn{
-  width:28px;height:28px;border-radius:50%;
+  width:32px;height:32px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  color:var(--gray);transition:background .15s;flex-shrink:0;
+  color:var(--gray);transition:background .15s, color .15s;flex-shrink:0;
 }
-.remove-btn:hover{background:#efefef}
-.remove-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5}
+.remove-btn:hover{background:rgba(248,113,113,0.1);color:#f87171;}
+.remove-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5}
 
 /* divider */
 .divider{height:1px;background:var(--border);margin:4px 0}
@@ -120,7 +137,7 @@ nav{
 
 <!-- NAV -->
 <nav>
-  <button class="nav-back" onclick="history.back()" title="Back">
+  <button class="nav-back" id="backBtn" title="Back">
     <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
   </button>
   <span class="nav-title">Search</span>
@@ -139,10 +156,9 @@ nav{
         type="text"
         placeholder="Search users…"
         autocomplete="off"
-        oninput="onSearch(this.value)"
         autofocus
       >
-      <div class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</div>
+      <div class="clear-btn" id="clearBtn">✕</div>
     </div>
   </div>
 
@@ -170,20 +186,29 @@ function removeRecent(un){
 
 function fmt(n){return n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':n}
 
+/* ── Escaping ── */
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, function(m) {
+    return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m];
+  });
+}
+
 /* ── Highlight matched text ── */
 function highlight(text, q){
-  if(!q) return text;
+  if(!text) return '';
+  if(!q) return escHtml(text);
   const idx = text.toLowerCase().indexOf(q.toLowerCase());
-  if(idx===-1) return text;
-  return text.slice(0,idx)
-    +`<b class="hl">${text.slice(idx,idx+q.length)}</b>`
-    +text.slice(idx+q.length);
+  if(idx===-1) return escHtml(text);
+  return escHtml(text.slice(0,idx))
+    + `<b class="hl">${escHtml(text.slice(idx,idx+q.length))}</b>`
+    + escHtml(text.slice(idx+q.length));
 }
 
 /* ── Navigate to profile ── */
 function goProfile(un){
   saveRecent(un);
-  window.location.href = `profile.html?user=${encodeURIComponent(un)}`;
+  window.location.href = `/profile/${encodeURIComponent(un)}/`;
 }
 
 /* ── Render recent ── */
@@ -195,19 +220,20 @@ function renderRecent(){
         <div class="empty-icon">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
-        <div class="empty-title">Search Instagram</div>
+        <div class="empty-title">Search Socaily</div>
         <div class="empty-sub">Find friends, creators, and accounts you love.</div>
       </div>`;
     return;
   }
-    <div class="section-label">Recent Searches Local Only</div>
+  area.innerHTML = `
+    <div class="section-label">Recent Searches</div>
     ${recentSearches.map(un=>`
-      <div class="user-item" onclick="goProfile('${un}')">
-        <div class="user-av" style="background:#fafafa">🧑</div>
+      <div class="user-item" data-un="${escHtml(un)}">
+        <div class="user-av">🧑</div>
         <div class="user-info">
-          <span class="user-un">${un}</span>
+          <span class="user-un">${escHtml(un)}</span>
         </div>
-        <button class="remove-btn" onclick="event.stopPropagation();removeRecent('${un}')">
+        <button class="remove-btn" data-remove="${escHtml(un)}">
           <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>`).join('')}`;
@@ -215,33 +241,56 @@ function renderRecent(){
 
 /* ―― Render search results (Live AJAX) ―― */
 let searchTimeout;
+let currentAbortController = null;
+
 function onSearch(val){
   const q = val.trim();
-  document.getElementById('clearBtn').classList.toggle('show', !!q);
-  if(!q){ renderRecent(); return; }
+  const clearBtn = document.getElementById('clearBtn');
+  if(q) {
+    clearBtn.classList.add('show');
+  } else {
+    clearBtn.classList.remove('show');
+    renderRecent();
+    if(currentAbortController) currentAbortController.abort();
+    return;
+  }
 
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    fetch('/search/?json=1&q=' + encodeURIComponent(q))
-      .then(res => res.json())
+    if (currentAbortController) {
+      currentAbortController.abort();
+    }
+    currentAbortController = new AbortController();
+    
+    const area = document.getElementById('resultsArea');
+    area.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon" style="border:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="var(--gray)" stroke-width="2" stroke-dasharray="31.4 31.4" fill="none"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/></animateTransform></circle></svg></div>
+        <div class="empty-sub">Searching...</div>
+      </div>`;
+
+    fetch('/search/?json=1&q=' + encodeURIComponent(q), { signal: currentAbortController.signal })
+      .then(res => {
+        if (!res.ok) throw new Error('Server returned ' + res.status);
+        return res.json();
+      })
       .then(data => {
-        const area = document.getElementById('resultsArea');
         if (!data.users || data.users.length === 0) {
           area.innerHTML=`
             <div class="empty-state">
               <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
               <div class="empty-title">No results</div>
-              <div class="empty-sub">No accounts found for "<b>${q}</b>".</div>
+              <div class="empty-sub">No accounts found for "<b>${escHtml(q)}</b>".</div>
             </div>`;
           return;
         }
         area.innerHTML = data.users.map((u,i) => {
           const avHTML = u.avatar_url 
-            ? `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+            ? `<img src="${escHtml(u.avatar_url)}" style="width:100%;height:100%;object-fit:cover;">`
             : `🧑`;
           return `
-          <div class="user-item" style="animation-delay:${i*0.04}s" onclick="goProfile('${u.username}')">
-            <div class="user-av" style="background:#fafafa;border:1px solid #efefef">${avHTML}</div>
+          <div class="user-item" style="animation-delay:${i*0.04}s" data-un="${escHtml(u.username)}">
+            <div class="user-av">${avHTML}</div>
             <div class="user-info">
               <span class="user-un">${highlight(u.username, q)}</span>
               <span class="user-name">${highlight(u.full_name, q)}</span>
@@ -250,19 +299,64 @@ function onSearch(val){
           </div>`;
         }).join('');
       })
-      .catch(err => console.error('Search failed:', err));
+      .catch(err => {
+        if (err.name === 'AbortError') return;
+        console.error('Search failed:', err);
+        area.innerHTML=`
+          <div class="empty-state">
+            <div class="empty-icon"><svg viewBox="0 0 24 24" stroke="var(--gray)" fill="none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div class="empty-title">Error</div>
+            <div class="empty-sub">Something went wrong.</div>
+          </div>`;
+      });
   }, 300);
 }
 
 function clearSearch(){
-  document.getElementById('searchInput').value='';
+  const input = document.getElementById('searchInput');
+  input.value='';
   document.getElementById('clearBtn').classList.remove('show');
-  document.getElementById('searchInput').focus();
+  input.focus();
+  if (currentAbortController) currentAbortController.abort();
   renderRecent();
 }
 
-/* ── Init ── */
-renderRecent();
+/* ── Initialization ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('clearBtn');
+  const resultsArea = document.getElementById('resultsArea');
+  const backBtn = document.getElementById('backBtn');
+  
+  if (backBtn) {
+    backBtn.addEventListener('click', () => history.back());
+  }
+
+  if (input) {
+    input.addEventListener('input', (e) => onSearch(e.target.value));
+  }
+  
+  if (clearBtn) {
+    clearBtn.addEventListener('click', clearSearch);
+  }
+  
+  if (resultsArea) {
+    resultsArea.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('.remove-btn');
+      if (removeBtn) {
+        e.stopPropagation();
+        removeRecent(removeBtn.dataset.remove);
+        return;
+      }
+      const userItem = e.target.closest('.user-item');
+      if (userItem) {
+        goProfile(userItem.dataset.un);
+      }
+    });
+  }
+  
+  renderRecent();
+});
 </script>
 </body>
 </html>

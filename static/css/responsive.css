@@ -1,0 +1,39 @@
+/* ============================================================
+   static/css/responsive.css
+   Socaily – Responsive Breakpoints
+   ============================================================ */
+
+/* ── Tablet ── */
+@media (max-width: 900px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    max-width: 640px;
+  }
+  .sb { display: none; }
+  nav { padding: 0 16px; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .wrap { padding: 16px 12px 80px; }
+  nav { padding: 0 12px; }
+  .logo { font-size: 18px; }
+  .post { border-radius: var(--r-md); }
+  .sbar { border-radius: var(--r-md); padding: 12px 8px; }
+
+  /* Bottom mobile nav */
+  .mobile-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 56px; z-index: 400;
+    background: rgba(7, 9, 15, 0.92);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-around;
+    padding: 0 8px;
+  }
+}
+
+/* ── Hide desktop mobile-nav ── */
+@media (min-width: 481px) {
+  .mobile-nav { display: none !important; }
+}

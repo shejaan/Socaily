@@ -1,0 +1,41 @@
+<!-- ================================================================
+   partials/suggested_users.html
+   Requires: suggested_users, following_ids, follower_ids, sent_request_ids
+   ================================================================ -->
+<div>
+  <div class="sgh">
+    <span class="sgl">Suggested for you</span>
+    <a href="{% url 'suggested_users' %}" class="seabtn">See All</a>
+  </div>
+
+  {% for sug in suggested_users %}
+    <div class="sgit">
+      <div class="sgav">
+        {% if sug.profile and sug.profile.profile_image %}
+          <img src="{{ sug.profile.profile_image.url }}" alt="{{ sug.username }}">
+        {% else %}
+          <div class="sgav-placeholder" style="background:linear-gradient(135deg,#ffd6e7,#a8c8ff)">🧑</div>
+        {% endif %}
+      </div>
+
+      <div class="sgi">
+        <span class="sgun">{{ sug.username }}</span>
+        <span class="sgsub">{% if sug.id in follower_ids %}Follows you{% else %}Suggested for you{% endif %}</span>
+      </div>
+
+      {% if sug.id in following_ids %}
+        <button type="button" class="flwbtn" style="color:#fff;background:#1877f2;cursor:default" disabled>Following</button>
+      {% elif sug.id in sent_request_ids %}
+        <form method="POST" action="{% url 'follow_user' sug.username %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit" class="flwbtn" style="color:#8e8e8e;cursor:default" disabled>Requested</button>
+        </form>
+      {% else %}
+        <form method="POST" action="{% url 'follow_user' sug.username %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit" class="flwbtn">Follow</button>
+        </form>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>

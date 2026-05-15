@@ -249,3 +249,110 @@ class Message(models.Model):
             models.Index(fields=['sender', 'receiver'],         name='message_sender_receiver_idx'),
         ]
 
+
+# ─────────────────────────────────────────────
+#  STORY
+# ─────────────────────────────────────────────
+
+class Story(models.Model):
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
+    image      = models.ImageField(upload_to='stories/')
+    caption    = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} story {self.id}"
+
+    def is_expired(self):
+        from django.utils import timezone
+        from datetime import timedelta
+        return timezone.now() > self.created_at + timedelta(hours=24)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = 'Stories'
+        indexes = [
+            models.Index(fields=['user', '-created_at'], name='story_user_time_idx'),
+        ]
+
+
+class StoryView(models.Model):
+    """Tracks which users have seen a story."""
+    story   = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='views')
+    viewer  = models.ForeignKey(User,  on_delete=models.CASCADE, related_name='story_views')
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['story', 'viewer'], name='unique_story_view'),
+        ]
+        verbose_name_plural = 'Story Views'
+
+
+class StoryReaction(models.Model):
+    """Emoji reactions to stories."""
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='reactions')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_reactions')
+    emoji = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Story Reactions'
+
+
+class StoryReply(models.Model):
+    """Text replies to stories (often creates a DM conversation)."""
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='replies')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_replies')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Story Replies'
+
+
+# ─────────────────────────────────────────────
+#  HIGHLIGHTS
+# ─────────────────────────────────────────────
+
+class Highlight(models.Model):
+    """A collection of saved stories displayed on a user profile."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='highlights')
+    title = models.CharField(max_length=50)
+    cover_image = models.ImageField(upload_to='highlights/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.title}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class HighlightItem(models.Model):
+    """Maps a past Story to a Highlight album."""
+    highlight = models.ForeignKey(Highlight, on_delete=models.CASCADE, related_name='items')
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='highlight_items')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['highlight', 'story'], name='unique_highlight_story'),
+        ]
+
+
+# ─────────────────────────────────────────────
+#  CLOSE FRIENDS
+# ─────────────────────────────────────────────
+
+class CloseFriend(models.Model):
+    """List of close friends for private stories."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='close_friends_list')
+    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='close_friend_of')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'friend'], name='unique_close_friend'),
+        ]
+

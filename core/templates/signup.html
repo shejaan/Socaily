@@ -1,45 +1,40 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instagram • Sign Up</title>
-  <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Nunito:wght@300;400;600;700&display=swap"
-    rel="stylesheet">
+  <title>Socaily • Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --grad: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-      --blue: #0095f6;
-      --blue2: #1877f2;
-      --border: #dbdbdb;
-      --gray: #8e8e8e;
-      --dark: #262626;
-      --bg: #fafafa;
-      --wh: #fff;
+      --grad: linear-gradient(135deg, #f7b733, #f56b2a, #e91e8c, #9b27af, #3f5efb, #00c6ff);
+      --grad-short: linear-gradient(135deg, #e91e8c, #3f5efb);
+      --blue: #4f8ef7;
+      --blue2: #00c6ff;
+      --border: rgba(255,255,255,0.08);
+      --gray: #94a3b8;
+      --dark: #f0f4ff;
+      --bg: #07090f;
+      --panel-bg: rgba(17, 24, 39, 0.9);
+      --input-bg: rgba(255,255,255,0.04);
     }
 
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 10% 0%, rgba(63, 94, 251, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(233, 30, 140, 0.09) 0%, transparent 60%);
       color: var(--dark);
       min-height: 100vh;
       display: flex;
-      flex-direction: column
+      flex-direction: column;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit
-    }
+    a { text-decoration: none; color: inherit; }
 
     button {
       cursor: pointer;
@@ -67,415 +62,163 @@
 
     /* ── PANEL ── */
     .panel {
-      background: var(--wh);
+      background: var(--panel-bg);
       border: 1px solid var(--border);
-      border-radius: 1px;
-      padding: 36px 40px 24px
+      border-radius: 20px;
+      padding: 40px 40px 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
     }
 
     /* ── LOGO ── */
     .logo-text {
-      font-family: 'Grand Hotel', cursive;
-      font-size: 40px;
-      color: var(--dark);
-      text-align: center;
-      margin-bottom: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: var(--grad);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradShift 5s ease infinite;
       display: block;
-      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      text-align: center;
     }
+    @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
     /* ── TAGLINE ── */
     .tagline {
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--gray);
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       line-height: 1.4;
     }
 
     /* ── FB BUTTON ── */
     .fb-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      background: #385185;
-      color: #fff;
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      transition: opacity .15s;
-      margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+      background: rgba(56, 81, 133, 0.2); color: #4f8ef7; border: 1px solid rgba(79, 142, 247, 0.3);
+      border-radius: 12px; padding: 10px 16px; font-size: 14px; font-weight: 700;
+      transition: background .15s, border-color .15s; margin-bottom: 20px;
     }
-
-    .fb-btn:hover {
-      opacity: .88
-    }
-
-    .fb-btn svg {
-      flex-shrink: 0
-    }
+    .fb-btn:hover { background: rgba(56, 81, 133, 0.4); border-color: rgba(79, 142, 247, 0.5); }
+    .fb-btn svg { flex-shrink: 0; fill: #4f8ef7; }
 
     /* ── SEPARATOR ── */
-    .separator {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px
-    }
-
-    .separator span {
-      flex: 1;
-      height: 1px;
-      background: var(--border)
-    }
-
-    .or {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gray);
-      letter-spacing: 1px;
-      flex-shrink: 0
-    }
+    .separator { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .separator span { flex: 1; height: 1px; background: var(--border); }
+    .or { font-size: 13px; font-weight: 700; color: var(--gray); letter-spacing: 1px; flex-shrink: 0; }
 
     /* ── FORM ── */
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 6px
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0)
-    }
-
-    .input-wrap {
-      position: relative;
-      width: 100%
-    }
+    form { display: flex; flex-direction: column; gap: 10px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+    .input-wrap { position: relative; width: 100%; }
 
     input {
       width: 100%;
-      padding: 9px 8px 7px;
-      background: #fafafa;
+      padding: 12px 14px;
+      background: var(--input-bg);
       border: 1px solid var(--border);
-      border-radius: 3px;
-      font-size: 12px;
-      font-family: 'Nunito', sans-serif;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
       color: var(--dark);
       outline: none;
-      transition: border-color .2s;
+      transition: border-color .2s, background .2s, box-shadow .2s;
     }
-
-    input::placeholder {
-      color: #aaa;
-      font-size: 12px
-    }
-
+    input::placeholder { color: rgba(148,163,184,0.6); font-size: 14px; }
     input:focus {
-      border-color: #a8a8a8;
-      background: #fff
+      border-color: rgba(79,142,247,0.5);
+      background: rgba(79,142,247,0.06);
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.1);
     }
-
-    input.error {
-      border-color: #ed4956
-    }
-
-    input.success {
-      border-color: #3bce57
-    }
+    input.error { border-color: rgba(248,113,113,0.5); background: rgba(248,113,113,0.05); }
+    input.success { border-color: rgba(52,211,153,0.5); background: rgba(52,211,153,0.05); }
 
     /* password toggle */
     .pw-toggle {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--dark);
-      cursor: pointer;
-      user-select: none;
-      transition: color .15s;
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 13px; font-weight: 700; color: var(--dark); cursor: pointer; user-select: none; transition: opacity .15s;
     }
-
-    .pw-toggle:hover {
-      color: var(--gray)
-    }
+    .pw-toggle:hover { opacity: 0.7; }
 
     /* field hint */
-    .field-hint {
-      font-size: 11px;
-      color: var(--gray);
-      margin-top: 1px;
-      margin-left: 2px;
-      display: none
-    }
-
-    .field-hint.show {
-      display: block
-    }
-
-    .field-hint.err {
-      color: #ed4956
-    }
-
-    .field-hint.ok {
-      color: #3bce57
-    }
+    .field-hint { font-size: 12px; color: var(--gray); margin-top: 2px; margin-left: 4px; display: none; }
+    .field-hint.show { display: block; }
+    .field-hint.err { color: #f87171; }
+    .field-hint.ok { color: #34d399; }
 
     /* ── SIGN UP BUTTON ── */
     .signup-btn {
-      width: 100%;
-      padding: 7px 16px;
-      background: var(--blue);
-      color: #fff;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      font-family: 'Nunito', sans-serif;
-      margin-top: 8px;
-      transition: background .15s, opacity .15s;
+      width: 100%; padding: 12px 16px; background: var(--grad-short); color: #fff; border-radius: 12px;
+      font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif; margin-top: 8px;
+      transition: opacity .15s, transform .15s; box-shadow: 0 4px 20px rgba(233,30,140,0.3); letter-spacing: 0.2px;
     }
-
-    .signup-btn:hover {
-      background: var(--blue2)
-    }
-
-    .signup-btn:active {
-      opacity: .85
-    }
-
-    .signup-btn:disabled {
-      background: #b2dffc;
-      cursor: default
-    }
+    .signup-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .signup-btn:active { opacity: .85; transform: none; }
+    .signup-btn:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed; box-shadow: none; transform: none; }
 
     /* ── TERMS ── */
-    .terms-text {
-      font-size: 12px;
-      color: var(--gray);
-      text-align: center;
-      margin-top: 14px;
-      line-height: 1.6
-    }
-
-    .terms-text a {
-      color: var(--gray);
-      font-weight: 700
-    }
-
-    .terms-text a:hover {
-      text-decoration: underline
-    }
+    .terms-text { font-size: 12px; color: var(--gray); text-align: center; margin-top: 16px; line-height: 1.6; }
+    .terms-text a { color: var(--dark); font-weight: 700; }
+    .terms-text a:hover { opacity: 0.8; }
 
     /* ── LOGIN PANEL ── */
     .panel.login-link-panel {
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
+      padding: 20px 40px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 10px; border-radius: 20px;
     }
-
-    .login-link-panel p {
-      font-size: 14px
-    }
-
+    .login-link-panel p { font-size: 14px; color: var(--gray); }
     .login-link-panel a {
-      color: var(--blue);
-      font-weight: 700;
-      font-size: 14px
+      background: var(--grad-short);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700; font-size: 14px;
     }
-
-    .login-link-panel a:hover {
-      opacity: .7
-    }
+    .login-link-panel a:hover { opacity: .8; }
 
     /* ── APP DOWNLOAD ── */
-    .app-download {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      margin-top: 6px
-    }
-
-    .app-download p {
-      font-size: 14px
-    }
-
-    .app-badges {
-      display: flex;
-      gap: 8px;
-      justify-content: center
-    }
-
+    .app-download { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 16px; }
+    .app-download p { font-size: 14px; color: var(--gray); }
+    .app-badges { display: flex; gap: 12px; justify-content: center; }
     .app-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px solid #c7c7c7;
-      border-radius: 6px;
-      padding: 5px 10px;
-      background: #fff;
-      color: var(--dark);
-      transition: border-color .15s, box-shadow .15s;
+      display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 12px; background: rgba(255,255,255,0.02); color: var(--dark);
+      transition: border-color .15s, background .15s;
     }
-
-    .app-badge:hover {
-      border-color: #888;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, .08)
-    }
-
-    .app-badge svg {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0
-    }
-
-    .badge-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2
-    }
-
-    .badge-text .small {
-      font-size: 9px;
-      font-weight: 400
-    }
-
-    .badge-text .big {
-      font-size: 13px;
-      font-weight: 700
-    }
+    .app-badge:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
+    .app-badge svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .badge-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .badge-text .small { font-size: 9px; font-weight: 400; color: var(--gray); }
+    .badge-text .big { font-size: 13px; font-weight: 700; }
 
     /* ── FOOTER ── */
-    footer {
-      padding: 24px 16px 16px;
-      text-align: center
-    }
-
-    footer ul {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 4px 16px;
-      margin-bottom: 14px
-    }
-
-    footer ul li a {
-      font-size: 11px;
-      color: var(--gray);
-      letter-spacing: .2px;
-      transition: color .15s
-    }
-
-    footer ul li a:hover {
-      color: var(--dark)
-    }
-
-    .copyright {
-      font-size: 11px;
-      color: var(--gray)
-    }
+    footer { padding: 32px 16px 20px; text-align: center; }
+    footer ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px; margin-bottom: 16px; }
+    footer ul li a { font-size: 12px; color: var(--gray); transition: color .15s; }
+    footer ul li a:hover { color: var(--dark); }
+    .copyright { font-size: 12px; color: var(--gray); }
 
     /* ── ALERT BANNER ── */
-    .alert {
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    .alert-error {
-      background: #ffeaea;
-      color: #c0392b;
-      border: 1px solid #f5c6cb
-    }
-
-    .alert-success {
-      background: #eafaf1;
-      color: #1a7a44;
-      border: 1px solid #b7e4c7
-    }
+    .alert { padding: 12px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 12px; text-align: center; line-height: 1.4; }
+    .alert-error { background: rgba(248,113,113,0.12); color: #fca5a5; border: 1px solid rgba(248,113,113,0.3); }
+    .alert-success { background: rgba(52,211,153,0.12); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.3); }
 
     /* ── SUCCESS OVERLAY ── */
-    .success-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .45);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s;
-    }
-
-    .success-overlay.show {
-      opacity: 1;
-      pointer-events: all
-    }
-
-    .success-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 40px 32px;
-      text-align: center;
-      max-width: 320px;
-      width: 90%;
-      transform: scale(.9);
-      transition: transform .3s;
-    }
-
-    .success-overlay.show .success-box {
-      transform: scale(1)
-    }
-
-    .success-icon {
-      font-size: 52px;
-      margin-bottom: 12px
-    }
-
-    .success-title {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 8px
-    }
-
-    .success-sub {
-      font-size: 14px;
-      color: var(--gray);
-      margin-bottom: 20px;
-      line-height: 1.5
-    }
-
-    .success-cta {
-      background: var(--blue);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 10px 28px;
-      border-radius: 8px;
-      transition: background .15s;
-    }
-
-    .success-cta:hover {
-      background: var(--blue2)
-    }
+    .success-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .success-overlay.show { opacity: 1; pointer-events: all; }
+    .success-box { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 20px; padding: 40px 32px; text-align: center; max-width: 320px; width: 90%; transform: scale(.9); transition: transform .3s; box-shadow: 0 20px 60px rgba(0,0,0,.5); backdrop-filter: blur(20px); }
+    .success-overlay.show .success-box { transform: scale(1); }
+    .success-icon { font-size: 52px; margin-bottom: 16px; }
+    .success-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; color: var(--dark); }
+    .success-sub { font-size: 14px; color: var(--gray); margin-bottom: 24px; line-height: 1.5; }
+    .success-cta { background: var(--grad-short); color: #fff; font-size: 15px; font-weight: 700; padding: 12px 28px; border-radius: 12px; transition: opacity .15s, transform .15s; display: inline-block; box-shadow: 0 4px 20px rgba(233,30,140,0.3); }
+    .success-cta:hover { opacity: 0.9; transform: translateY(-1px); }
 
     /* ── ANIMATIONS ── */
     @keyframes fadeInUp {
@@ -538,16 +281,18 @@
 
       <!-- ══ SIGNUP PANEL ══ -->
       <div class="panel">
-        <span class="logo-text">Instagram</span>
+        <span class="logo-text">Socaily</span>
         <p class="tagline">Sign up to see photos and videos from your friends.</p>
 
-        <!-- Facebook signup -->
-        <a href="#" class="fb-btn">
-          <svg viewBox="0 0 24 24" fill="#fff" width="18" height="18">
-            <path
-              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        <!-- Google signup -->
+        <a href="{% provider_login_url 'google' %}" class="fb-btn" style="background: rgba(255, 255, 255, 0.05); color: #ea4335; border: 1px solid rgba(255, 255, 255, 0.1);">
+          <svg viewBox="0 0 24 24" width="18" height="18">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Sign up with Facebook
+          Sign up with Google
         </a>
 
         <div class="separator"><span></span>
@@ -636,7 +381,7 @@
   <div class="success-overlay" id="successOverlay">
     <div class="success-box">
       <div class="success-icon">🎉</div>
-      <div class="success-title">Welcome to Instagram!</div>
+      <div class="success-title">Welcome to Socaily!</div>
       <div class="success-sub" id="successMsg">Your account has been created successfully.</div>
       <a href="{% url 'home' %}" class="success-cta">Go to Home</a>
 
@@ -657,7 +402,7 @@
       <li><a href="#">Hashtags</a></li>
       <li><a href="#">Language</a></li>
     </ul>
-    <p class="copyright">© 2026 Instagram from Meta</p>
+    <p class="copyright">&copy; 2026 Socaily by Shejaan</p>
   </footer>
 
     <script>

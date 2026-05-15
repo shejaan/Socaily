@@ -1,0 +1,28 @@
+<!-- ================================================================
+   partials/story_upload_modal.html
+   No view-level variables needed — controlled by JS
+   ================================================================ -->
+<div id="storyUploadOverlay"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:400px;overflow:hidden;box-shadow:var(--shadow-lg)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)">
+      <h3 style="font-size:16px;font-weight:700;color:var(--dark)">New Story</h3>
+      <button type="button" onclick="closeStoryUpload()" style="background:none;border:none;cursor:pointer;font-size:24px;color:var(--dark)">&times;</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+      <div id="storyDropZone" onclick="document.getElementById('storyFileInput').click()"
+           style="border:2px dashed var(--border);border-radius:8px;padding:30px 20px;text-align:center;cursor:pointer">
+        <div style="font-size:32px;margin-bottom:8px">&#x1F4F7;</div>
+        <div style="font-size:14px;color:var(--gray)">Tap to select a photo</div>
+      </div>
+      <input type="file" id="storyFileInput" accept="image/*" style="display:none" onchange="previewStory(this)">
+      <img id="storyPreviewImg"
+           style="display:none;width:100%;border-radius:8px;max-height:200px;object-fit:cover" alt="preview">
+      <input id="storyCaptionInput" type="text" maxlength="200" placeholder="Add a caption&#x2026;"
+             style="border:1px solid #dbdbdb;border-radius:8px;padding:9px 12px;font-size:14px;outline:none;font-family:inherit">
+      <button type="button" onclick="submitStory()" id="storySubmitBtn"
+              style="background:#0095f6;color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:700;cursor:pointer">Share story</button>
+      <div id="storyError" style="color:#ed4956;font-size:13px;display:none"></div>
+    </div>
+  </div>
+</div>

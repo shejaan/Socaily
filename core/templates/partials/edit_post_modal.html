@@ -1,0 +1,24 @@
+<!-- ================================================================
+   partials/edit_post_modal.html
+   No view-level variables needed — populated by JS openEditPost()
+   ================================================================ -->
+<div id="editPostOverlay"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:400px;overflow:hidden;box-shadow:var(--shadow-lg)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)">
+      <span style="font-size:15px;font-weight:800;color:var(--dark)">Edit post</span>
+      <button onclick="closeEditPost()" style="background:none;border:none;cursor:pointer;font-size:24px;color:var(--dark)">&times;</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+      <input type="hidden" id="editPostId">
+      <textarea id="editCaption" rows="4" maxlength="2200"
+                style="border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;resize:none;outline:none;font-family:inherit;background:var(--bg-3);color:var(--dark)"
+                placeholder="Write a caption&#x2026;"></textarea>
+      <input id="editLocation" type="text" maxlength="255" placeholder="Add location&#x2026;"
+             style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;outline:none;font-family:inherit;background:var(--bg-3);color:var(--dark)">
+      <button onclick="submitEditPost()"
+              style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:700;cursor:pointer">Save changes</button>
+      <div id="editPostError" style="color:#f87171;font-size:13px;display:none"></div>
+    </div>
+  </div>
+</div>

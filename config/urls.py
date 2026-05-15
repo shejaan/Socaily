@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls     import path
+from django.urls     import path, include
 from django.conf     import settings
 from django.conf.urls.static import static
 
@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # ── Auth ──
+    path('accounts/', include('allauth.urls')),
     path('register/', views.register_view, name='register'),
     path('signup/',   views.register_view, name='signup'),   # alias
     path('login/',    views.login_view,    name='login'),
@@ -26,10 +27,15 @@ urlpatterns = [
 
     # ── Posts ──
     path('create-post/',              views.create_post,  name='create_post'),
+    path('edit-post/<int:post_id>/',  views.edit_post,    name='edit_post'),
     path('delete-post/<int:post_id>/', views.delete_post, name='delete_post'),
     path('like/<int:post_id>/',       views.like_post,    name='like_post'),
     path('comment/<int:post_id>/',    views.add_comment,  name='add_comment'),
     path('save/<int:post_id>/',       views.save_post,    name='save_post'),
+    path('share/<int:post_id>/',      views.share_post,   name='share_post'),
+
+    # ── Feed API (infinite scroll) ──
+    path('api/feed/', views.feed_api, name='feed_api'),
 
     # ── Follow ──
     path('follow/<str:username>/',           views.follow_user,            name='follow_user'),
@@ -40,6 +46,7 @@ urlpatterns = [
     # ── Notifications ──
     path('notifications/',                       views.notifications_view,     name='notifications'),
     path('notifications/<int:notif_id>/read/',   views.mark_notification_read, name='mark_notification_read'),
+    path('notifications/read-all/',              views.mark_all_notifications_read, name='mark_all_notifications_read'),
 
     # ── Explore ──
     path('explore/', views.explore_view, name='explore'),
@@ -56,13 +63,19 @@ urlpatterns = [
     # ── Search ──
     path('search/', views.search_view, name='search'),
 
+    # ── Stories ──
+    path('stories/upload/',                  views.upload_story,  name='upload_story'),
+    path('stories/view/<int:story_id>/',     views.view_story,    name='view_story'),
+    path('stories/delete/<int:story_id>/',   views.delete_story,  name='delete_story'),
+    path('stories/<str:username>/',          views.user_stories,  name='user_stories'),
+
     # ── Misc ──
     path('suggested-users/', views.suggested_users_view, name='suggested_users'),
+    # switch_account kept as stub (redirects to login) so no template refs break
     path('switch-account/',  views.switch_account_view,  name='switch_account'),
 
 ]
 
 # Serve media files locally in development only
-# In production, Cloudinary handles all media — no local serving needed
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

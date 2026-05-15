@@ -1,0 +1,95 @@
+/* ============================================================
+   static/css/modals.css
+   Socaily – Dark Glassmorphism Modals
+   ============================================================ */
+
+/* ── Shared overlay ── */
+.cp-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 500; opacity: 0; pointer-events: none;
+  transition: opacity var(--t-mid); padding: 20px;
+}
+.cp-overlay.open { opacity: 1; pointer-events: all; }
+
+/* ── Create Post Modal ── */
+.cp-modal {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  width: 100%; max-width: 780px; height: 88vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: pop 0.25s var(--ease) both;
+  box-shadow: var(--shadow-lg);
+}
+
+.cp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.cp-title { font-size: 16px; font-weight: 800; text-align: center; flex: 1; color: var(--text-primary); }
+.cp-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--text-secondary);
+  transition: background var(--t-fast), color var(--t-fast);
+  background: none; border: none; cursor: pointer;
+}
+.cp-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.cp-form { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+/* ── Upload zone ── */
+.upload-zone {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; padding: 48px 24px; cursor: pointer;
+  transition: background var(--t-mid); min-height: 200px;
+  border: 2px dashed var(--border);
+  margin: 20px; border-radius: var(--r-lg);
+}
+.upload-zone:hover { background: var(--bg-hover); border-color: var(--blue); }
+
+.upload-icon {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: var(--bg-2);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.upload-icon svg { width: 40px; height: 40px; stroke: var(--text-secondary); fill: none; }
+.upload-title { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+.upload-sub { font-size: 14px; color: var(--text-secondary); }
+
+.cap-av { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; border: 1.5px solid var(--border); }
+.cap-av img { width: 100%; height: 100%; object-fit: cover; }
+.cap-av-placeholder { width: 100%; height: 100%; background: var(--grad-short); }
+.cap-un { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+
+/* ── Caption textarea ── */
+.cap-textarea {
+  border: 1px solid var(--border); outline: none; resize: none;
+  font-family: 'Inter', sans-serif; font-size: 15px;
+  padding: 12px 16px; width: 100%; height: 120px;
+  color: var(--text-primary); line-height: 1.6;
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.cap-textarea:focus { background: var(--bg-3); border-color: var(--blue); }
+.cap-textarea::placeholder { color: var(--text-muted); }
+
+/* ── Share button ── */
+.cp-share-btn {
+  background: var(--grad-short);
+  color: #fff; font-size: 14px; font-weight: 700;
+  padding: 12px; border-radius: var(--r-md);
+  border: none; cursor: pointer;
+  transition: opacity var(--t-fast), transform var(--t-fast);
+  box-shadow: 0 4px 20px rgba(233, 30, 140, 0.3);
+}
+.cp-share-btn:hover { opacity: .88; transform: translateY(-1px); }

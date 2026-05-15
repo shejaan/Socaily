@@ -1,0 +1,13 @@
+<!-- ================================================================
+   partials/feed_end.html
+   Infinite scroll sentinel and end-of-feed marker.
+   Requires: has_more_posts
+   ================================================================ -->
+{% if has_more_posts %}
+  <div id="feedSentinel" style="height:40px;display:flex;align-items:center;justify-content:center">
+    <span style="font-size:13px;color:#8e8e8e">Loading more posts…</span>
+  </div>
+{% endif %}
+<div id="feedEnd" style="display:none;text-align:center;padding:20px;font-size:13px;color:#8e8e8e">
+  You're all caught up ✓
+</div>

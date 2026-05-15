@@ -1,0 +1,178 @@
+/* ============================================================
+   static/css/posts.css
+   Socaily – Premium Dark Post Cards
+   ============================================================ */
+
+/* ── Post card ── */
+.post {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: visible;
+  animation: up 0.4s var(--ease) both;
+  transition: border-color var(--t-mid), box-shadow var(--t-mid), transform var(--t-mid);
+}
+.post:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 8px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(79,142,247,0.1);
+  transform: translateY(-2px);
+}
+
+/* ── Post header ── */
+.ph {
+  display: flex; align-items: center;
+  padding: 14px 16px; gap: 12px;
+}
+
+.par {
+  width: 42px; height: 42px; border-radius: 50%;
+  padding: 2px; flex-shrink: 0; cursor: pointer;
+  background: var(--grad);
+  transition: transform var(--t-fast), opacity var(--t-fast);
+}
+.par:hover { transform: scale(1.06); opacity: .9; }
+
+.pari {
+  width: 100%; height: 100%; border-radius: 50%;
+  border: 2px solid var(--bg-card);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; background: var(--bg-2);
+}
+.pari img { width: 100%; height: 100%; object-fit: cover; }
+
+.pm { flex: 1; min-width: 0; }
+.pun {
+  font-size: 14px; font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer; transition: color var(--t-fast);
+  display: block;
+}
+.pun:hover { color: var(--blue); }
+.ploc { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+
+/* ── 3-dot menu button ── */
+.pmb {
+  color: var(--text-secondary);
+  padding: 6px; border-radius: var(--r-sm);
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.pmb:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+/* ── Post image ── */
+.pimg {
+  width: 100%; aspect-ratio: 1; overflow: hidden; cursor: pointer;
+  position: relative;
+}
+.pimg img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s var(--ease);
+  display: block;
+}
+.pimg:hover img { transform: scale(1.04); }
+
+/* ── Action row ── */
+.pac {
+  display: flex; align-items: center;
+  padding: 10px 16px 6px; gap: 6px;
+}
+
+.abtn {
+  display: flex; align-items: center;
+  transition: transform var(--t-fast), color var(--t-fast);
+  color: var(--text-secondary);
+  background: none; border: none; cursor: pointer;
+  padding: 6px; border-radius: var(--r-sm);
+}
+.abtn:hover {
+  transform: scale(1.15);
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.abtn svg { width: 24px; height: 24px; }
+.bkbtn { margin-left: auto; }
+
+/* ── Like animation ── */
+.abtn.liked { color: var(--pink); }
+.abtn.liked:hover { color: #ff4da6; }
+
+/* ── Post info ── */
+.pinfo { padding: 4px 16px 12px; }
+.plikes {
+  font-size: 14px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 6px;
+}
+.pcap {
+  font-size: 14px; line-height: 1.55;
+  color: var(--text-secondary); margin-bottom: 6px;
+}
+.pcap .un {
+  font-weight: 700; color: var(--text-primary);
+  margin-right: 5px; cursor: pointer;
+}
+.pcap .un:hover { color: var(--blue); }
+.pht { color: var(--blue); }
+
+.vcmt {
+  font-size: 13px; color: var(--text-muted);
+  cursor: pointer; display: block; margin-bottom: 6px;
+  transition: color var(--t-fast);
+}
+.vcmt:hover { color: var(--text-secondary); }
+
+/* ── Comment box ── */
+.comment-box { display: none; margin-top: 8px; }
+
+/* ── Comment input row ── */
+.crow {
+  display: flex; align-items: center;
+  border-top: 1px solid var(--border);
+  padding: 10px 16px; gap: 12px;
+}
+.cinput {
+  flex: 1; border: none; outline: none;
+  background: none; font-size: 14px;
+  color: var(--text-primary);
+}
+.cinput::placeholder { color: var(--text-muted); }
+
+.postbtn {
+  color: var(--blue); font-size: 13px; font-weight: 700;
+  transition: opacity var(--t-fast), color var(--t-fast);
+  background: none; border: none; cursor: pointer;
+}
+.postbtn:hover { color: var(--cyan); }
+
+.ptime {
+  font-size: 10px; color: var(--text-muted);
+  padding: 0 16px 10px;
+  text-transform: uppercase; letter-spacing: .6px;
+}
+
+.like-form, .comment-form { display: contents; }
+
+/* ── Post dropdown menu ── */
+.post-menu-drop {
+  display: none;
+  position: absolute; right: 0; top: calc(100% + 6px);
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 300; min-width: 160px; overflow: hidden;
+  animation: dropIn 0.15s var(--ease) both;
+}
+.post-menu-item {
+  display: block; width: 100%;
+  text-align: left; padding: 12px 16px;
+  font-size: 14px; font-weight: 500;
+  color: var(--text-secondary);
+  background: none; border: none;
+  cursor: pointer; font-family: inherit;
+  transition: background var(--t-fast), color var(--t-fast);
+  border-bottom: 1px solid var(--border);
+}
+.post-menu-item:last-child { border-bottom: none; }
+.post-menu-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.post-menu-item.danger { color: #f87171; }
+.post-menu-item.danger:hover { background: rgba(248,113,113,0.08); }

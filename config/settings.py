@@ -1,5 +1,5 @@
 """
-Django settings for insta_clone.
+Django settings for Socaily.
 
 Production-ready configuration:
   - Environment variable driven (SECRET_KEY, DATABASE_URL, CLOUDINARY_URL, DEBUG, ALLOWED_HOSTS)
@@ -80,12 +80,16 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'core',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
     'core.middleware.AdminDebugMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # WhiteNoise must come directly after SecurityMiddleware
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -93,6 +97,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -108,6 +113,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.utils.context_processors.notifications_context',
             ],
         },
     },
@@ -119,7 +125,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ─────────────────────────────────────────────
 #  DATABASE
 #  Set DATABASE_URL env var on Render.
-#  Falls back to SQLite for local development.
+#  Falls back to PostgreSQL locally.
 # ─────────────────────────────────────────────
 
 _db_url = os.environ.get('DATABASE_URL')
@@ -134,8 +140,12 @@ if _db_url:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME':   BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'socaily',
+            'USER': 'postgres',
+            'PASSWORD': '2512',
+            'HOST': 'localhost',
+            'PORT': '5432',
         }
     }
 
@@ -181,22 +191,17 @@ STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else 
 
 # ─────────────────────────────────────────────
 #  MEDIA FILES  (Cloudinary in production, local in dev)
-#
-#  Uses cloudinary SDK native CLOUDINARY_URL parsing:
-#    cloudinary.config() reads CLOUDINARY_URL env var automatically.
-#  No more fragile manual string-splitting.
 # ─────────────────────────────────────────────
 
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '')
+WHITENOISE_MANIFEST_STRICT = False
 
 if CLOUDINARY_URL:
     import cloudinary
-
-    # Let the SDK parse the URL natively — handles any cloud name format correctly
-    cloudinary.config()  # reads CLOUDINARY_URL from environment automatically
+    cloudinary.config()
 
     _cfg = cloudinary.config()
     CLOUDINARY_STORAGE = {
@@ -209,29 +214,25 @@ if CLOUDINARY_URL:
         'default':     {'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'},
         'staticfiles': {
             'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-            'OPTIONS': {'manifest_strict': False},
         },
     }
 else:
     if not DEBUG:
-        # Production without Cloudinary = uploaded files will vanish on Render redeploy
         logging.getLogger('django').critical(
             "CLOUDINARY_URL is not set in production! "
-            "Media uploads will be stored on the ephemeral Render filesystem "
-            "and will be LOST on every redeploy. Set CLOUDINARY_URL immediately."
+            "Media uploads will vanish on Render redeploy."
         )
 
     STORAGES = {
         'default':     {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
         'staticfiles': {
             'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-            'OPTIONS': {'manifest_strict': False},
         },
     }
 
 
 # ─────────────────────────────────────────────
-#  EMAIL  (console in dev, configure SMTP in prod)
+#  EMAIL
 # ─────────────────────────────────────────────
 
 if DEBUG:
@@ -269,3 +270,68 @@ LOGGING = {
         },
     },
 }
+
+# ─────────────────────────────────────────────
+#  ASGI / CHANNELS (WebSocket)
+# ─────────────────────────────────────────────
+
+ASGI_APPLICATION = 'config.asgi.application'
+
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
+if 'channels' in INSTALLED_APPS or True:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [REDIS_URL],
+            },
+        },
+    }
+
+# ─────────────────────────────────────────────
+#  CELERY (Background Tasks)
+# ─────────────────────────────────────────────
+
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+# ─────────────────────────────────────────────
+#  ALLAUTH / GOOGLE LOGIN
+# ─────────────────────────────────────────────
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', '123'),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', '456'),
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+SOCIALACCOUNT_LOGIN_ON_GET = True

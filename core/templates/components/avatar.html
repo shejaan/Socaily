@@ -1,0 +1,28 @@
+<!-- ================================================================
+   components/avatar.html
+   Reusable avatar ring (for story bars and post headers).
+   Variables:
+     user       — Django User object
+     size       — "sm" | "md" | "lg" (default md)
+     with_ring  — True/False gradient ring
+     seen       — True/False for story ring state
+   ================================================================ -->
+{% if with_ring %}
+  <div class="sring {% if seen %}seen{% endif %}">
+    <div class="sri">
+{% else %}
+  <div class="pari">
+{% endif %}
+
+{% if user.profile and user.profile.profile_image %}
+  <img src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}">
+{% else %}
+  🧑
+{% endif %}
+
+{% if with_ring %}
+    </div>
+  </div>
+{% else %}
+  </div>
+{% endif %}
