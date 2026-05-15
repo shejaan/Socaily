@@ -703,7 +703,7 @@
       
       msgs.forEach(function (m) {
         var text = m.is_deleted ? '<i>Message unsent</i>' : esc(m.text);
-        var isEmoji = !m.is_deleted && /^\\p{Emoji}+$/u.test(m.text) && m.text.length <= 8;
+        var isEmoji = !m.is_deleted && /^\p{Emoji}+$/u.test(m.text) && m.text.length <= 8;
         
         var replyHtml = '';
         if(m.reply_to && !m.is_deleted) {
@@ -714,8 +714,8 @@
         var editHtml = m.is_edited && !m.is_deleted ? \`<span class="msg-edited">(edited)</span>\` : '';
         
         var safeTextForJS = m.text ? esc(m.text).replace(/'/g, "\\'") : '';
-        var menuEvents = !m.is_deleted ? \`oncontextmenu="showMenu(event, \${m.id}, '\${safeText}', \${m.out})"\` : '';
-        menuEvents += !m.is_deleted ? \` ontouchstart="window.lt=setTimeout(function(){showMenu(event, \${m.id}, '\${safeText}', \${m.out})}, 500)" ontouchend="clearTimeout(window.lt)" ontouchmove="clearTimeout(window.lt)"\` : '';
+        var menuEvents = !m.is_deleted ? \`oncontextmenu="showMenu(event, \${m.id}, '\${safeTextForJS}', \${m.out})"\` : '';
+        menuEvents += !m.is_deleted ? \` ontouchstart="window.lt=setTimeout(function(){showMenu(event, \${m.id}, '\${safeTextForJS}', \${m.out})}, 500)" ontouchend="clearTimeout(window.lt)" ontouchmove="clearTimeout(window.lt)"\` : '';
 
         var deletedStyle = m.is_deleted ? 'background:transparent;border:1px solid var(--border);color:var(--gray);font-style:italic;' : '';
 
