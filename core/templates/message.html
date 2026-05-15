@@ -713,7 +713,7 @@
 
         var editHtml = m.is_edited && !m.is_deleted ? \`<span class="msg-edited">(edited)</span>\` : '';
         
-        var safeText = m.text ? esc(m.text).replace(/'/g, "\\\\'") : '';
+        var safeTextForJS = m.text ? esc(m.text).replace(/'/g, "\\'") : '';
         var menuEvents = !m.is_deleted ? \`oncontextmenu="showMenu(event, \${m.id}, '\${safeText}', \${m.out})"\` : '';
         menuEvents += !m.is_deleted ? \` ontouchstart="window.lt=setTimeout(function(){showMenu(event, \${m.id}, '\${safeText}', \${m.out})}, 500)" ontouchend="clearTimeout(window.lt)" ontouchmove="clearTimeout(window.lt)"\` : '';
 
@@ -850,7 +850,15 @@
     function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
     function insertEmoji() { var i = document.getElementById('msgInput'); if (!i) return; var e = ['😊', '❤️', '🔥', '😂', '🎉', '👏', '🙌', '💯', '✨', '😍']; i.value += e[Math.floor(Math.random() * e.length)]; i.focus(); }
     function setTab(btn) { document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); }); btn.classList.add('active'); }
-    function esc(t) { if (!t) return ''; return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function esc(t) {
+      if (!t) return '';
+      return String(t)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
     /* ── Init ── */
     loadConversations();
