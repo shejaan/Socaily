@@ -76,5 +76,5 @@
         }
       })
       .catch(e => console.log('Polling error', e));
-  }, 15000); // 15 seconds
+  }, 3000); // 3 seconds
 })();
