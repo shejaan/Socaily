@@ -495,7 +495,7 @@
           allConvos = data.conversations || [];
           renderConvoList(allConvos);
         })
-        .catch(function () { /* silently fail */ });
+        .catch(function (err) { console.error("Failed to load conversations:", err); });
     }
 
     function renderConvoList(convos) {
@@ -790,7 +790,7 @@
            setTimeout(scrollBottom, 100);
            loadConversations();
         })
-        .catch(function () { /* silently fail */ });
+        .catch(function (err) { console.error("Search error:", err); });
     }
 
     /* ── New message modal ── */
