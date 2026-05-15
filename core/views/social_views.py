@@ -219,9 +219,10 @@ def mark_all_notifications_read(request):
 @login_required
 def poll_updates_api(request):
     """
-    Polling endpoint for JS to fetch real-time updates (notifications, posts).
+    Polling endpoint for JS to fetch real-time updates (notifications, posts, messages).
     """
     unread_notifs = Notification.objects.filter(receiver=request.user, is_read=False).count()
+    unread_msgs   = Message.objects.filter(receiver=request.user, is_read=False).count()
     
     from core.services.feed_service import get_feed_queryset
     latest_post = get_feed_queryset(request.user).first()
@@ -229,5 +230,6 @@ def poll_updates_api(request):
     
     return JsonResponse({
         'unread_notifs': unread_notifs,
+        'unread_msgs':   unread_msgs,
         'latest_post_id': latest_post_id
     })

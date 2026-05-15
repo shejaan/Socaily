@@ -50,8 +50,14 @@
             dot.style.display = 'block';
           }
         }
+
+        // 2. Dynamic Message Dot
+        var msgDot = document.getElementById('msgDot');
+        if (msgDot) {
+          msgDot.style.display = (data.unread_msgs > 0) ? 'block' : 'none';
+        }
         
-        // 2. Dynamic Feed Posts checker (Only on homepage)
+        // 3. Dynamic Feed Posts checker (Only on homepage)
         if (window.latestFeedPostId && data.latest_post_id > window.latestFeedPostId) {
           var feed = document.querySelector('.feed');
           if (feed && !document.getElementById('newPostsBtn')) {

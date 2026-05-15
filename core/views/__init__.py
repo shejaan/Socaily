@@ -39,6 +39,7 @@ from core.views.social_views  import (
     notifications_view,
     mark_notification_read,
     mark_all_notifications_read,
+    poll_updates_api,
 )
 
 from core.views.message_views import (
@@ -66,7 +67,7 @@ __all__ = [
     'like_post', 'add_comment', 'save_post',
     'follow_user', 'unfollow_user',
     'accept_follow_request', 'decline_follow_request',
-    'notifications_view', 'mark_notification_read', 'mark_all_notifications_read',
+    'notifications_view', 'mark_notification_read', 'mark_all_notifications_read', 'poll_updates_api',
     # messages
     'messages_view', 'get_conversations', 'get_messages', 'send_message',
     # stories
