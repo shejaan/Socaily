@@ -47,6 +47,8 @@ from core.views.message_views import (
     get_conversations,
     get_messages,
     send_message,
+    edit_message,
+    delete_message,
 )
 
 from core.views.story_views import (
@@ -70,6 +72,7 @@ __all__ = [
     'notifications_view', 'mark_notification_read', 'mark_all_notifications_read', 'poll_updates_api',
     # messages
     'messages_view', 'get_conversations', 'get_messages', 'send_message',
+    'edit_message', 'delete_message',
     # stories
     'upload_story', 'view_story', 'user_stories',
 ]

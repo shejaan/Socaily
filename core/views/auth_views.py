@@ -9,6 +9,7 @@ Handles all authentication-related views:
 """
 
 import re
+import logging
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -16,6 +17,8 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+
+logger = logging.getLogger(__name__)
 
 
 def _is_ajax(request):
@@ -62,16 +65,21 @@ def register_view(request):
         if User.objects.filter(email__iexact=email).exists():
             return err('An account with that email already exists.', 'email')
 
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.first_name = fullname
-        user.save()
-        login(request, user)
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.first_name = fullname
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-        if is_ajax:
-            return JsonResponse({'success': True, 'redirect': reverse('home')})
+            if is_ajax:
+                return JsonResponse({'success': True, 'redirect': reverse('home')})
 
-        messages.success(request, f"Welcome to Socaily, @{username}! 🎉")
-        return redirect('home')
+            messages.success(request, f"Welcome to Socaily, @{username}! 🎉")
+            return redirect('home')
+
+        except Exception as e:
+            logger.error(f"Registration error: {str(e)}")
+            return err("An unexpected error occurred. Please try again.")
 
     return render(request, 'signup.html')
 

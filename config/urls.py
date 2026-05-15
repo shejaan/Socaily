@@ -56,10 +56,12 @@ urlpatterns = [
     path('saved/', views.saved_posts_view, name='saved_posts'),
 
     # ── Messages ──
-    path('messages/',                       views.messages_view,    name='messages'),
-    path('messages/conversations/',         views.get_conversations, name='get_conversations'),
-    path('messages/with/<str:username>/',   views.get_messages,     name='get_messages'),
-    path('messages/send/<str:username>/',   views.send_message,     name='send_message'),
+    path('messages/',                          views.messages_view,    name='messages'),
+    path('messages/conversations/',             views.get_conversations, name='get_conversations'),
+    path('messages/with/<str:username>/',       views.get_messages,     name='get_messages'),
+    path('messages/send/<str:username>/',       views.send_message,     name='send_message'),
+    path('messages/<int:message_id>/edit/',     views.edit_message,     name='edit_message'),
+    path('messages/<int:message_id>/delete/',   views.delete_message,   name='delete_message'),
 
     # ── Search ──
     path('search/', views.search_view, name='search'),

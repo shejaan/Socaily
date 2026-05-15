@@ -4,8 +4,10 @@ message_views.py
 Handles all messaging / conversation views:
   - messages_view      – Renders the messaging UI
   - get_conversations  – Returns JSON list of conversations
-  - get_messages       – Returns JSON messages with a specific user
+  - get_messages       – Returns JSON messages with a specific user (paginated)
   - send_message       – Saves a new message to a Conversation
+  - edit_message       – Edit own message
+  - delete_message     – Soft-delete (unsend) own message
 """
 
 import json
@@ -14,9 +16,37 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 
 from core.models import Conversation, Message
+
+
+# ─────────────────────────────────────────────
+#  HELPERS
+# ─────────────────────────────────────────────
+
+def _serialize_message(m, me_id):
+    """Serialize a single Message for the API response."""
+    reply_data = None
+    if m.reply_to_id and not m.reply_to.is_deleted:
+        rt = m.reply_to
+        reply_data = {
+            'id':   rt.id,
+            'text': rt.text,
+            'out':  rt.sender_id == me_id,
+        }
+
+    return {
+        'id':         m.id,
+        'text':       m.text if not m.is_deleted else None,
+        'out':        m.sender_id == me_id,
+        'time':       m.created_at.strftime('%H:%M'),
+        'sender':     m.sender.username,
+        'is_read':    m.is_read,
+        'is_edited':  m.is_edited,
+        'is_deleted': m.is_deleted,
+        'reply_to':   reply_data,
+    }
 
 
 # ─────────────────────────────────────────────
@@ -61,8 +91,9 @@ def get_conversations(request):
         if not partner:
             continue
 
-        latest = conv.messages.last()
-        unread = conv.messages.filter(receiver=me, is_read=False).exists()
+        # Get latest non-deleted message
+        latest = conv.messages.filter(is_deleted=False).last()
+        unread = conv.messages.filter(receiver=me, is_read=False, is_deleted=False).exists()
 
         result.append({
             'username':   partner.username,
@@ -88,25 +119,31 @@ def get_conversations(request):
 
 @login_required
 def get_messages(request, username):
-    """Return JSON messages between me and <username>. Marks them as read."""
+    """Return JSON messages between me and <username>. Marks them as read.
+    Supports ?before=<message_id> for pagination (load older).
+    """
     me    = request.user
     other = get_object_or_404(User, username=username)
 
     conv, _ = Conversation.get_or_create_for(me, other)
 
-    msgs = conv.messages.select_related('sender').order_by('created_at')
+    PAGE = 40
+    qs = conv.messages.select_related('sender', 'reply_to', 'reply_to__sender').order_by('created_at')
+
+    before_id = request.GET.get('before')
+    if before_id:
+        try:
+            qs = qs.filter(id__lt=int(before_id))
+        except (ValueError, TypeError):
+            pass
+    
+    msgs = list(qs.order_by('-created_at')[:PAGE])
+    msgs.reverse()
 
     # Mark incoming messages as read
-    msgs.filter(receiver=me, is_read=False).update(is_read=True)
+    conv.messages.filter(receiver=me, is_read=False).update(is_read=True)
 
-    data = [{
-        'id':      m.id,
-        'text':    m.text,
-        'out':     m.sender_id == me.id,
-        'time':    m.created_at.strftime('%H:%M'),
-        'sender':  m.sender.username,
-        'is_read': m.is_read,
-    } for m in msgs]
+    data = [_serialize_message(m, me.id) for m in msgs]
 
     other_info = {
         'username':   other.username,
@@ -117,7 +154,9 @@ def get_messages(request, username):
         ),
     }
 
-    return JsonResponse({'messages': data, 'other': other_info})
+    has_more = qs.count() > PAGE if before_id else conv.messages.count() > PAGE
+
+    return JsonResponse({'messages': data, 'other': other_info, 'has_more': has_more})
 
 
 # ─────────────────────────────────────────────
@@ -132,10 +171,12 @@ def send_message(request, username):
     other = get_object_or_404(User, username=username)
 
     try:
-        body = json.loads(request.body)
-        text = body.get('text', '').strip()
+        body    = json.loads(request.body)
+        text    = body.get('text', '').strip()
+        reply_id = body.get('reply_to')
     except Exception:
-        text = request.POST.get('text', '').strip()
+        text     = request.POST.get('text', '').strip()
+        reply_id = None
 
     if not text:
         return JsonResponse({'error': 'Empty message'}, status=400)
@@ -145,20 +186,72 @@ def send_message(request, username):
 
     conv, _ = Conversation.get_or_create_for(me, other)
 
+    reply_obj = None
+    if reply_id:
+        try:
+            reply_obj = Message.objects.get(id=int(reply_id), conversation=conv)
+        except (Message.DoesNotExist, ValueError):
+            pass
+
     msg = Message.objects.create(
         conversation=conv,
         sender=me,
         receiver=other,
         text=text,
+        reply_to=reply_obj,
     )
 
     # Bump conversation updated_at so inbox re-sorts correctly
     conv.save(update_fields=['updated_at'])
 
-    return JsonResponse({
-        'id':      msg.id,
-        'text':    msg.text,
-        'out':     True,
-        'time':    msg.created_at.strftime('%H:%M'),
-        'is_read': False,
-    })
+    return JsonResponse(_serialize_message(msg, me.id))
+
+
+# ─────────────────────────────────────────────
+#  EDIT MESSAGE  (AJAX PATCH)
+# ─────────────────────────────────────────────
+
+@login_required
+@require_http_methods(['PATCH', 'POST'])
+def edit_message(request, message_id):
+    """PATCH /messages/<id>/edit/ — edit own message text."""
+    me  = request.user
+    msg = get_object_or_404(Message, id=message_id, sender=me)
+
+    if msg.is_deleted:
+        return JsonResponse({'error': 'Cannot edit a deleted message.'}, status=400)
+
+    try:
+        body = json.loads(request.body)
+        new_text = body.get('text', '').strip()
+    except Exception:
+        new_text = request.POST.get('text', '').strip()
+
+    if not new_text:
+        return JsonResponse({'error': 'Empty text.'}, status=400)
+
+    if len(new_text) > 1000:
+        return JsonResponse({'error': 'Too long.'}, status=400)
+
+    msg.text = new_text
+    msg.is_edited = True
+    msg.save(update_fields=['text', 'is_edited', 'updated_at'])
+
+    return JsonResponse({'ok': True, 'id': msg.id, 'text': msg.text, 'is_edited': True})
+
+
+# ─────────────────────────────────────────────
+#  UNSEND / DELETE MESSAGE  (AJAX DELETE/POST)
+# ─────────────────────────────────────────────
+
+@login_required
+@require_http_methods(['DELETE', 'POST'])
+def delete_message(request, message_id):
+    """DELETE /messages/<id>/delete/ — soft-delete (unsend) own message."""
+    me  = request.user
+    msg = get_object_or_404(Message, id=message_id, sender=me)
+
+    msg.is_deleted = True
+    msg.save(update_fields=['is_deleted', 'updated_at'])
+
+    return JsonResponse({'ok': True, 'id': msg.id})
