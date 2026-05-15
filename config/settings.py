@@ -280,11 +280,12 @@ LOGGING = {
 #  ASGI / CHANNELS (WebSocket)
 # ─────────────────────────────────────────────
 
-ASGI_APPLICATION = 'config.asgi.application'
+# Channels disabled for Render WSGI stability
+# ASGI_APPLICATION = 'config.asgi.application'
 
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
-if 'channels' in INSTALLED_APPS or True:
+if False: # 'channels' in INSTALLED_APPS:
     CHANNEL_LAYERS = {
         'default': {
             'BACKEND': 'channels_redis.core.RedisChannelLayer',

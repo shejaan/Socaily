@@ -493,6 +493,11 @@
     let activeUser = null;
     let pollTimer = null;
     let allConvos = [];
+    
+    let currentMsgs = [];
+    let hasMoreMsgs = true;
+    let fetchingOlder = false;
+    let activeOther = null;
 
     /* ── Avatar helper ── */
     function avHTML(avatarUrl, size) {
@@ -563,8 +568,8 @@
       // Load messages
       fetchMessages(username, true);
 
-      // Poll every 4 seconds for new messages
-      pollTimer = setInterval(function () { fetchMessages(username, false); }, 4000);
+      // Poll every 8 seconds for new messages (lightweight REST polling)
+      pollTimer = setInterval(function () { fetchMessages(username, false); }, 8000);
     }
 
     function closeChatMobile() {
@@ -578,11 +583,73 @@
       fetch('/messages/with/' + username + '/', { credentials: 'same-origin' })
         .then(function (r) { return r.json(); })
         .then(function (data) {
-          if (firstLoad) buildChatUI(data.other, data.messages);
-          else renderMessages(data.messages, data.other);
-          // Refresh sidebar to clear unread badges
-          if (firstLoad) loadConversations();
+          activeOther = data.other;
+          hasMoreMsgs = data.has_more;
+          if (firstLoad) {
+            currentMsgs = data.messages;
+            buildChatUI(data.other, currentMsgs);
+            setupScrollListener(username);
+            loadConversations();
+          } else {
+            if (mergeMessages(data.messages)) {
+              renderMessages(currentMsgs, data.other);
+            }
+          }
         });
+    }
+
+    function mergeMessages(newMsgs) {
+      let msgMap = {};
+      let changed = false;
+      currentMsgs.forEach(m => msgMap[m.id] = m);
+      newMsgs.forEach(m => {
+        if (!msgMap[m.id] || JSON.stringify(msgMap[m.id]) !== JSON.stringify(m)) {
+          msgMap[m.id] = m;
+          changed = true;
+        }
+      });
+      if (changed) {
+        currentMsgs = Object.values(msgMap).sort((a, b) => a.id - b.id);
+      }
+      return changed;
+    }
+
+    function fetchOlderMessages(username) {
+      if (fetchingOlder || !hasMoreMsgs || currentMsgs.length === 0) return;
+      fetchingOlder = true;
+      var oldestId = currentMsgs[0].id;
+      
+      var area = document.getElementById('msgArea');
+      var oldScrollHeight = area ? area.scrollHeight : 0;
+      var oldScrollTop = area ? area.scrollTop : 0;
+
+      fetch('/messages/with/' + username + '/?before=' + oldestId, { credentials: 'same-origin' })
+        .then(r => r.json())
+        .then(data => {
+          hasMoreMsgs = data.has_more;
+          if (data.messages.length > 0) {
+            mergeMessages(data.messages);
+            renderMessages(currentMsgs, activeOther, true);
+            
+            if (area) {
+              setTimeout(() => {
+                area.scrollTop = area.scrollHeight - oldScrollHeight + oldScrollTop;
+              }, 0);
+            }
+          }
+          fetchingOlder = false;
+        })
+        .catch(() => fetchingOlder = false);
+    }
+
+    function setupScrollListener(username) {
+      var area = document.getElementById('msgArea');
+      if (!area) return;
+      area.addEventListener('scroll', function() {
+        if (area.scrollTop < 50) {
+          fetchOlderMessages(username);
+        }
+      });
     }
 
     /* ── Build full chat UI ── */
@@ -738,7 +805,7 @@
     }
 
     var _lastMsgData = "";
-    function renderMessages(msgs, other) {
+    function renderMessages(msgs, other, preserveScroll = false) {
       var dataStr = JSON.stringify(msgs);
       if (dataStr === _lastMsgData) return;
       _lastMsgData = dataStr;
@@ -792,14 +859,14 @@
       }
 
       area.innerHTML = html;
-      if (isScrolledToBottom || msgs.length <= 15) scrollBottom();
+      if (!preserveScroll && (isScrolledToBottom || msgs.length <= 15)) scrollBottom();
     }
 
 
 
     function updateMessages(msgs) {
       // Replaced by passing 'other' correctly, but keeping for compatibility if called
-      renderMessages(msgs, {username: activeUser}); 
+      renderMessages(msgs, activeOther); 
     }
 
     /* ── Send message ── */
