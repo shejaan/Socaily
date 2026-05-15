@@ -301,6 +301,14 @@
     .nm-un { font-size: 14px; font-weight: 700; display: block; color: var(--dark); }
     .nm-name { font-size: 13px; color: var(--gray); }
 
+    .back-btn-mobile {
+      display: none; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 8px;
+      color: var(--dark); cursor: pointer; margin-right: 4px;
+    }
+    .back-btn-mobile:hover { background: rgba(255,255,255,0.06); }
+    .back-btn-mobile svg { width: 24px; height: 24px; }
+
     @media(max-width:768px) {
       .inbox {
         width: 100%
@@ -313,6 +321,10 @@
       nav .nsearch {
         display: none
       }
+
+      .shell.mobile-chat-active .inbox { display: none; }
+      .shell.mobile-chat-active .chat { display: flex; width: 100%; }
+      .back-btn-mobile { display: flex; }
     }
   </style>
 </head>
@@ -478,6 +490,10 @@
       activeUser = username;
       if (pollTimer) clearInterval(pollTimer);
 
+      // Open on mobile & focus input
+      var shell = document.querySelector('.shell');
+      if (shell) shell.classList.add('mobile-chat-active');
+
       // Mark active in sidebar
       renderConvoList(allConvos);
 
@@ -486,6 +502,19 @@
 
       // Poll every 4 seconds for new messages
       pollTimer = setInterval(function () { fetchMessages(username, false); }, 4000);
+      
+      // Auto-focus input for keyboard
+      setTimeout(function() {
+        var inp = document.getElementById('msgInput');
+        if (inp) inp.focus();
+      }, 300);
+    }
+
+    function closeChatMobile() {
+      var shell = document.querySelector('.shell');
+      if (shell) shell.classList.remove('mobile-chat-active');
+      activeUser = null;
+      if (pollTimer) clearInterval(pollTimer);
     }
 
     function fetchMessages(username, firstLoad) {
@@ -504,6 +533,9 @@
       var panel = document.getElementById('chatPanel');
       panel.innerHTML = `
     <div class="chat-header">
+      <div class="back-btn-mobile" onclick="closeChatMobile()" title="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </div>
       <div class="chat-av" onclick="window.location='/profile/${other.username}/'">
         ${avHTML(other.avatar_url, 38)}
       </div>
